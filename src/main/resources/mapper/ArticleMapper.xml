@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.blog.dao.ArticleMapper" >
+  <resultMap id="BaseResultMap" type="com.blog.pojo.Article" >
+    <constructor >
+      <idArg column="aid" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <idArg column="id" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="title" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="category_id" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="create_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="delete_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="update_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="publish_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="status" jdbcType="BIT" javaType="java.lang.Boolean" />
+      <arg column="pageview" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="is_encrypt" jdbcType="BIT" javaType="java.lang.Boolean" />
+    </constructor>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.blog.pojo.ArticleWithBLOBs" >
+    <constructor >
+      <idArg column="aid" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <idArg column="id" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="title" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="category_id" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="create_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="delete_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="update_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="publish_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="status" jdbcType="BIT" javaType="java.lang.Boolean" />
+      <arg column="pageview" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="is_encrypt" jdbcType="BIT" javaType="java.lang.Boolean" />
+      <arg column="content" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+      <arg column="html_content" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+      <arg column="cover" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+      <arg column="sub_message" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    aid, id, title, category_id, create_time, delete_time, update_time, publish_time, 
+    status, pageview, is_encrypt
+  </sql>
+  <sql id="Blob_Column_List" >
+    content, html_content, cover, sub_message
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.blog.pojo.ArticleKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from article
+    where aid = #{aid,jdbcType=INTEGER}
+      and id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.blog.pojo.ArticleKey" >
+    delete from article
+    where aid = #{aid,jdbcType=INTEGER}
+      and id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.blog.pojo.ArticleWithBLOBs" >
+    insert into article (aid, id, title, 
+      category_id, create_time, delete_time, 
+      update_time, publish_time, status, 
+      pageview, is_encrypt, content, 
+      html_content, cover, sub_message
+      )
+    values (#{aid,jdbcType=INTEGER}, #{id,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{categoryId,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER}, #{deleteTime,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=INTEGER}, #{publishTime,jdbcType=INTEGER}, #{status,jdbcType=BIT}, 
+      #{pageview,jdbcType=INTEGER}, #{isEncrypt,jdbcType=BIT}, #{content,jdbcType=LONGVARCHAR}, 
+      #{htmlContent,jdbcType=LONGVARCHAR}, #{cover,jdbcType=LONGVARCHAR}, #{subMessage,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.blog.pojo.ArticleWithBLOBs" >
+    insert into article
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="aid != null" >
+        aid,
+      </if>
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="categoryId != null" >
+        category_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="deleteTime != null" >
+        delete_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="publishTime != null" >
+        publish_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="pageview != null" >
+        pageview,
+      </if>
+      <if test="isEncrypt != null" >
+        is_encrypt,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="htmlContent != null" >
+        html_content,
+      </if>
+      <if test="cover != null" >
+        cover,
+      </if>
+      <if test="subMessage != null" >
+        sub_message,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="aid != null" >
+        #{aid,jdbcType=INTEGER},
+      </if>
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="deleteTime != null" >
+        #{deleteTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="publishTime != null" >
+        #{publishTime,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="pageview != null" >
+        #{pageview,jdbcType=INTEGER},
+      </if>
+      <if test="isEncrypt != null" >
+        #{isEncrypt,jdbcType=BIT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="htmlContent != null" >
+        #{htmlContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="cover != null" >
+        #{cover,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="subMessage != null" >
+        #{subMessage,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.blog.pojo.ArticleWithBLOBs" >
+    update article
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null" >
+        category_id = #{categoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="deleteTime != null" >
+        delete_time = #{deleteTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="publishTime != null" >
+        publish_time = #{publishTime,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=BIT},
+      </if>
+      <if test="pageview != null" >
+        pageview = #{pageview,jdbcType=INTEGER},
+      </if>
+      <if test="isEncrypt != null" >
+        is_encrypt = #{isEncrypt,jdbcType=BIT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="htmlContent != null" >
+        html_content = #{htmlContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="cover != null" >
+        cover = #{cover,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="subMessage != null" >
+        sub_message = #{subMessage,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where aid = #{aid,jdbcType=INTEGER}
+      and id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.blog.pojo.ArticleWithBLOBs" >
+    update article
+    set title = #{title,jdbcType=VARCHAR},
+      category_id = #{categoryId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=INTEGER},
+      delete_time = #{deleteTime,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=INTEGER},
+      publish_time = #{publishTime,jdbcType=INTEGER},
+      status = #{status,jdbcType=BIT},
+      pageview = #{pageview,jdbcType=INTEGER},
+      is_encrypt = #{isEncrypt,jdbcType=BIT},
+      content = #{content,jdbcType=LONGVARCHAR},
+      html_content = #{htmlContent,jdbcType=LONGVARCHAR},
+      cover = #{cover,jdbcType=LONGVARCHAR},
+      sub_message = #{subMessage,jdbcType=LONGVARCHAR}
+    where aid = #{aid,jdbcType=INTEGER}
+      and id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.blog.pojo.Article" >
+    update article
+    set title = #{title,jdbcType=VARCHAR},
+      category_id = #{categoryId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=INTEGER},
+      delete_time = #{deleteTime,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=INTEGER},
+      publish_time = #{publishTime,jdbcType=INTEGER},
+      status = #{status,jdbcType=BIT},
+      pageview = #{pageview,jdbcType=INTEGER},
+      is_encrypt = #{isEncrypt,jdbcType=BIT}
+    where aid = #{aid,jdbcType=INTEGER}
+      and id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

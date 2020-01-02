@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.dao.AdminMapper">
+  <resultMap id="BaseResultMap" type="com.blog.pojo.Admin">
+    <constructor>
+      <idArg column="aid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <idArg column="user_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="username" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="password" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="salt" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="access_token" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="token_expires_in" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="create_time" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="status" javaType="java.lang.Boolean" jdbcType="BIT" />
+      <arg column="last_login_time" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    aid, user_id, username, password, salt, access_token, token_expires_in, create_time, 
+    status, last_login_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.blog.pojo.AdminKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from admin
+    where aid = #{aid,jdbcType=INTEGER}
+      and user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.blog.pojo.AdminKey">
+    delete from admin
+    where aid = #{aid,jdbcType=INTEGER}
+      and user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.blog.pojo.Admin">
+    insert into admin (aid, user_id, username, 
+      password, salt, access_token, 
+      token_expires_in, create_time, status, 
+      last_login_time)
+    values (#{aid,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{accessToken,jdbcType=VARCHAR}, 
+      #{tokenExpiresIn,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, #{status,jdbcType=BIT}, 
+      #{lastLoginTime,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.blog.pojo.Admin">
+    insert into admin
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="aid != null">
+        aid,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="salt != null">
+        salt,
+      </if>
+      <if test="accessToken != null">
+        access_token,
+      </if>
+      <if test="tokenExpiresIn != null">
+        token_expires_in,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="aid != null">
+        #{aid,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="accessToken != null">
+        #{accessToken,jdbcType=VARCHAR},
+      </if>
+      <if test="tokenExpiresIn != null">
+        #{tokenExpiresIn,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="lastLoginTime != null">
+        #{lastLoginTime,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.blog.pojo.Admin">
+    update admin
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        salt = #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="accessToken != null">
+        access_token = #{accessToken,jdbcType=VARCHAR},
+      </if>
+      <if test="tokenExpiresIn != null">
+        token_expires_in = #{tokenExpiresIn,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time = #{lastLoginTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where aid = #{aid,jdbcType=INTEGER}
+      and user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.blog.pojo.Admin">
+    update admin
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=VARCHAR},
+      access_token = #{accessToken,jdbcType=VARCHAR},
+      token_expires_in = #{tokenExpiresIn,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=INTEGER},
+      status = #{status,jdbcType=BIT},
+      last_login_time = #{lastLoginTime,jdbcType=INTEGER}
+    where aid = #{aid,jdbcType=INTEGER}
+      and user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+  <resultMap id="BaseResultMap" type="com.blog.pojo.Admin">
+    <constructor>
+      <idArg column="aid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <idArg column="user_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="username" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="password" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="salt" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="access_token" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="token_expires_in" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="create_time" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="status" javaType="java.lang.Boolean" jdbcType="BIT" />
+      <arg column="last_login_time" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    aid, user_id, username, password, salt, access_token, token_expires_in, create_time, 
+    status, last_login_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.blog.pojo.AdminKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from admin
+    where aid = #{aid,jdbcType=INTEGER}
+      and user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.blog.pojo.AdminKey">
+    delete from admin
+    where aid = #{aid,jdbcType=INTEGER}
+      and user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.blog.pojo.Admin">
+    insert into admin (aid, user_id, username, 
+      password, salt, access_token, 
+      token_expires_in, create_time, status, 
+      last_login_time)
+    values (#{aid,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{accessToken,jdbcType=VARCHAR}, 
+      #{tokenExpiresIn,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, #{status,jdbcType=BIT}, 
+      #{lastLoginTime,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.blog.pojo.Admin">
+    insert into admin
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="aid != null">
+        aid,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="salt != null">
+        salt,
+      </if>
+      <if test="accessToken != null">
+        access_token,
+      </if>
+      <if test="tokenExpiresIn != null">
+        token_expires_in,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="aid != null">
+        #{aid,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="accessToken != null">
+        #{accessToken,jdbcType=VARCHAR},
+      </if>
+      <if test="tokenExpiresIn != null">
+        #{tokenExpiresIn,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="lastLoginTime != null">
+        #{lastLoginTime,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.blog.pojo.Admin">
+    update admin
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        salt = #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="accessToken != null">
+        access_token = #{accessToken,jdbcType=VARCHAR},
+      </if>
+      <if test="tokenExpiresIn != null">
+        token_expires_in = #{tokenExpiresIn,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=BIT},
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time = #{lastLoginTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where aid = #{aid,jdbcType=INTEGER}
+      and user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.blog.pojo.Admin">
+    update admin
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=VARCHAR},
+      access_token = #{accessToken,jdbcType=VARCHAR},
+      token_expires_in = #{tokenExpiresIn,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=INTEGER},
+      status = #{status,jdbcType=BIT},
+      last_login_time = #{lastLoginTime,jdbcType=INTEGER}
+    where aid = #{aid,jdbcType=INTEGER}
+      and user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+</mapper>

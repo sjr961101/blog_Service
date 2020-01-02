@@ -20,7 +20,7 @@ public class UserController {
     @Resource
     private RedisUtil redisUtil;
 
-    @RequestMapping(value = "/initAdd", method = RequestMethod.GET)
+    @RequestMapping(value = "/testRedis", method = RequestMethod.GET)
     public Response initInsert() throws Exception {
         Map map1= new HashMap();
         redisUtil.set("code","200");

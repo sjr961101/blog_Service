@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.blog.dao.blogConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.blog.pojo.blogConfig" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="blog_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="view_password" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="salt" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.blog.pojo.blogConfigWithBLOBs" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="blog_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="view_password" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="salt" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="avatar" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+      <arg column="sign" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+      <arg column="wxpay_qrcode" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+      <arg column="alipay_qrcode" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+      <arg column="github" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, blog_name, view_password, salt
+  </sql>
+  <sql id="Blob_Column_List" >
+    avatar, sign, wxpay_qrcode, alipay_qrcode, github
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from blog_config
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from blog_config
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.blog.pojo.blogConfigWithBLOBs" >
+    insert into blog_config (id, blog_name, view_password, 
+      salt, avatar, sign, 
+      wxpay_qrcode, alipay_qrcode, github
+      )
+    values (#{id,jdbcType=INTEGER}, #{blogName,jdbcType=VARCHAR}, #{viewPassword,jdbcType=VARCHAR}, 
+      #{salt,jdbcType=VARCHAR}, #{avatar,jdbcType=LONGVARCHAR}, #{sign,jdbcType=LONGVARCHAR}, 
+      #{wxpayQrcode,jdbcType=LONGVARCHAR}, #{alipayQrcode,jdbcType=LONGVARCHAR}, #{github,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.blog.pojo.blogConfigWithBLOBs" >
+    insert into blog_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="blogName != null" >
+        blog_name,
+      </if>
+      <if test="viewPassword != null" >
+        view_password,
+      </if>
+      <if test="salt != null" >
+        salt,
+      </if>
+      <if test="avatar != null" >
+        avatar,
+      </if>
+      <if test="sign != null" >
+        sign,
+      </if>
+      <if test="wxpayQrcode != null" >
+        wxpay_qrcode,
+      </if>
+      <if test="alipayQrcode != null" >
+        alipay_qrcode,
+      </if>
+      <if test="github != null" >
+        github,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="blogName != null" >
+        #{blogName,jdbcType=VARCHAR},
+      </if>
+      <if test="viewPassword != null" >
+        #{viewPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null" >
+        #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null" >
+        #{avatar,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="sign != null" >
+        #{sign,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="wxpayQrcode != null" >
+        #{wxpayQrcode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="alipayQrcode != null" >
+        #{alipayQrcode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="github != null" >
+        #{github,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.blog.pojo.blogConfigWithBLOBs" >
+    update blog_config
+    <set >
+      <if test="blogName != null" >
+        blog_name = #{blogName,jdbcType=VARCHAR},
+      </if>
+      <if test="viewPassword != null" >
+        view_password = #{viewPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null" >
+        salt = #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null" >
+        avatar = #{avatar,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="sign != null" >
+        sign = #{sign,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="wxpayQrcode != null" >
+        wxpay_qrcode = #{wxpayQrcode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="alipayQrcode != null" >
+        alipay_qrcode = #{alipayQrcode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="github != null" >
+        github = #{github,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.blog.pojo.blogConfigWithBLOBs" >
+    update blog_config
+    set blog_name = #{blogName,jdbcType=VARCHAR},
+      view_password = #{viewPassword,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=VARCHAR},
+      avatar = #{avatar,jdbcType=LONGVARCHAR},
+      sign = #{sign,jdbcType=LONGVARCHAR},
+      wxpay_qrcode = #{wxpayQrcode,jdbcType=LONGVARCHAR},
+      alipay_qrcode = #{alipayQrcode,jdbcType=LONGVARCHAR},
+      github = #{github,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.blog.pojo.blogConfig" >
+    update blog_config
+    set blog_name = #{blogName,jdbcType=VARCHAR},
+      view_password = #{viewPassword,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

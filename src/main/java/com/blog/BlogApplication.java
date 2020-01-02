@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableTransactionManagement
-@MapperScan("com.blog.dao")
+//@MapperScan("com.blog.dao")
 public class BlogApplication {
 
     public static void main(String[] args) {

@@ -18,7 +18,7 @@ public class Response extends HashMap<String,Object> {
 	private Logger logger = LoggerFactory.getLogger(Response.class);
 
 	private Response() {
-		this.put(CODE, 200);
+		this.put(CODE, 0);
         this.put(MESSAGE, "OK");
 	}
 

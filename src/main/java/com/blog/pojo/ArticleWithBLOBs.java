@@ -9,7 +9,7 @@ public class ArticleWithBLOBs extends Article {
 
     private String subMessage;
 
-    public ArticleWithBLOBs(Integer aid, String id, String title, String categoryId, Integer createTime, Integer deleteTime, Integer updateTime, Integer publishTime, Boolean status, Integer pageview, Boolean isEncrypt, String content, String htmlContent, String cover, String subMessage) {
+    public ArticleWithBLOBs(Integer aid, String id, String title, String categoryId, Long createTime, Long deleteTime, Long updateTime, Long publishTime, Boolean status, Integer pageview, Boolean isEncrypt, String content, String htmlContent, String cover, String subMessage) {
         super(aid, id, title, categoryId, createTime, deleteTime, updateTime, publishTime, status, pageview, isEncrypt);
         this.content = content;
         this.htmlContent = htmlContent;

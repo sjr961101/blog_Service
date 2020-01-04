@@ -7,10 +7,10 @@
       <idArg column="id" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="title" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="category_id" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="create_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="delete_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="update_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="publish_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="create_time" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="delete_time" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="update_time" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="publish_time" jdbcType="BIGINT" javaType="java.lang.Long" />
       <arg column="status" jdbcType="BIT" javaType="java.lang.Boolean" />
       <arg column="pageview" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="is_encrypt" jdbcType="BIT" javaType="java.lang.Boolean" />
@@ -22,10 +22,10 @@
       <idArg column="id" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="title" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="category_id" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="create_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="delete_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="update_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="publish_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="create_time" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="delete_time" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="update_time" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="publish_time" jdbcType="BIGINT" javaType="java.lang.Long" />
       <arg column="status" jdbcType="BIT" javaType="java.lang.Boolean" />
       <arg column="pageview" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="is_encrypt" jdbcType="BIT" javaType="java.lang.Boolean" />
@@ -51,12 +51,25 @@
     where aid = #{aid,jdbcType=INTEGER}
       and id = #{id,jdbcType=VARCHAR}
   </select>
+  <select id="selectByList" resultMap="ResultMapWithBLOBs" parameterType="com.blog.util.ParamMap" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from article
+    limit #{page,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+  <select id="selectByAllcount" resultType="java.lang.Integer" >
+    select
+    count(0)
+    from article
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="com.blog.pojo.ArticleKey" >
     delete from article
     where aid = #{aid,jdbcType=INTEGER}
       and id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.blog.pojo.ArticleWithBLOBs" >
+  <insert id="insert" parameterType="com.blog.pojo.ArticleWithBLOBs">
     insert into article (aid, id, title, 
       category_id, create_time, delete_time, 
       update_time, publish_time, status, 
@@ -64,8 +77,8 @@
       html_content, cover, sub_message
       )
     values (#{aid,jdbcType=INTEGER}, #{id,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
-      #{categoryId,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER}, #{deleteTime,jdbcType=INTEGER}, 
-      #{updateTime,jdbcType=INTEGER}, #{publishTime,jdbcType=INTEGER}, #{status,jdbcType=BIT}, 
+      #{categoryId,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, #{deleteTime,jdbcType=BIGINT},
+      #{updateTime,jdbcType=BIGINT}, #{publishTime,jdbcType=BIGINT}, #{status,jdbcType=BIT},
       #{pageview,jdbcType=INTEGER}, #{isEncrypt,jdbcType=BIT}, #{content,jdbcType=LONGVARCHAR}, 
       #{htmlContent,jdbcType=LONGVARCHAR}, #{cover,jdbcType=LONGVARCHAR}, #{subMessage,jdbcType=LONGVARCHAR}
       )

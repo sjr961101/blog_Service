@@ -1,2 +1,2 @@
-# blog_Service
-# blog_Service
+1.0版本为最基础实现功能版(实现ing)
+2.0暂定重构为分布式

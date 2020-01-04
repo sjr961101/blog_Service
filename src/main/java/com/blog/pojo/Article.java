@@ -1,17 +1,19 @@
 package com.blog.pojo;
 
+import java.util.List;
+
 public class Article extends ArticleKey {
     private String title;
 
     private String categoryId;
 
-    private Integer createTime;
+    private Long createTime;
 
-    private Integer deleteTime;
+    private Long deleteTime;
 
-    private Integer updateTime;
+    private Long updateTime;
 
-    private Integer publishTime;
+    private Long publishTime;
 
     private Boolean status;
 
@@ -19,7 +21,15 @@ public class Article extends ArticleKey {
 
     private Boolean isEncrypt;
 
-    public Article(Integer aid, String id, String title, String categoryId, Integer createTime, Integer deleteTime, Integer updateTime, Integer publishTime, Boolean status, Integer pageview, Boolean isEncrypt) {
+    private String createTimeStr;
+
+    private String subMessage;
+
+    private List<Tag> tags;
+
+    private List<Category> categories;
+
+    public Article(Integer aid, String id, String title, String categoryId, Long createTime, Long deleteTime, Long updateTime, Long publishTime, Boolean status, Integer pageview, Boolean isEncrypt) {
         super(aid, id);
         this.title = title;
         this.categoryId = categoryId;
@@ -52,36 +62,44 @@ public class Article extends ArticleKey {
         this.categoryId = categoryId == null ? null : categoryId.trim();
     }
 
-    public Integer getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 
-    public Integer getDeleteTime() {
+    public Long getDeleteTime() {
         return deleteTime;
     }
 
-    public void setDeleteTime(Integer deleteTime) {
+    public void setDeleteTime(Long deleteTime) {
         this.deleteTime = deleteTime;
     }
 
-    public Integer getUpdateTime() {
+    public Long getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
     }
 
-    public Integer getPublishTime() {
+    public Long getPublishTime() {
         return publishTime;
     }
 
-    public void setPublishTime(Integer publishTime) {
+    public void setPublishTime(Long publishTime) {
         this.publishTime = publishTime;
+    }
+
+    public Boolean getEncrypt() {
+        return isEncrypt;
+    }
+
+    public void setEncrypt(Boolean encrypt) {
+        isEncrypt = encrypt;
     }
 
     public Boolean getStatus() {
@@ -106,5 +124,37 @@ public class Article extends ArticleKey {
 
     public void setIsEncrypt(Boolean isEncrypt) {
         this.isEncrypt = isEncrypt;
+    }
+
+    public String getCreateTimeStr() {
+        return createTimeStr;
+    }
+
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
+    }
+
+    public String getSubMessage() {
+        return subMessage;
+    }
+
+    public void setSubMessage(String subMessage) {
+        this.subMessage = subMessage;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 }

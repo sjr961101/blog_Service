@@ -23,11 +23,12 @@ public class Article extends ArticleKey {
 
     private String createTimeStr;
 
-    private String subMessage;
+    private String publishTimeStr;
 
     private List<Tag> tags;
 
-    private List<Category> categories;
+    private Category categories;
+
 
     public Article(Integer aid, String id, String title, String categoryId, Long createTime, Long deleteTime, Long updateTime, Long publishTime, Boolean status, Integer pageview, Boolean isEncrypt) {
         super(aid, id);
@@ -134,13 +135,6 @@ public class Article extends ArticleKey {
         this.createTimeStr = createTimeStr;
     }
 
-    public String getSubMessage() {
-        return subMessage;
-    }
-
-    public void setSubMessage(String subMessage) {
-        this.subMessage = subMessage;
-    }
 
     public List<Tag> getTags() {
         return tags;
@@ -150,11 +144,19 @@ public class Article extends ArticleKey {
         this.tags = tags;
     }
 
-    public List<Category> getCategories() {
+    public Category getCategories() {
         return categories;
     }
 
-    public void setCategories(List<Category> categories) {
+    public void setCategories(Category categories) {
         this.categories = categories;
+    }
+
+    public String getPublishTimeStr() {
+        return publishTimeStr;
+    }
+
+    public void setPublishTimeStr(String publishTimeStr) {
+        this.publishTimeStr = publishTimeStr;
     }
 }

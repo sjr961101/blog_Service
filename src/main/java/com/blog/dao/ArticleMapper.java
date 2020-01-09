@@ -1,28 +1,20 @@
 package com.blog.dao;
 
-import com.blog.pojo.Article;
-import com.blog.pojo.ArticleKey;
+import com.blog.model.Article;
 import com.blog.pojo.ArticleWithBLOBs;
 import com.blog.util.ParamMap;
 
 import java.util.List;
 
 public interface ArticleMapper {
-    int deleteByPrimaryKey(ArticleKey key);
 
-    int insert(ArticleWithBLOBs record);
-
-    int insertSelective(ArticleWithBLOBs record);
-
-    ArticleWithBLOBs selectByPrimaryKey(ArticleKey key);
-
-    List<ArticleWithBLOBs> selectByList(ParamMap paramMap);
+    int insert(Article record);
 
     Integer selectByAllcount();
 
-    int updateByPrimaryKeySelective(ArticleWithBLOBs record);
+    List<Article> selectList(ParamMap paramMap);
 
-    int updateByPrimaryKeyWithBLOBs(ArticleWithBLOBs record);
+    Article selectDetailById(ParamMap paramMap);
 
-    int updateByPrimaryKey(Article record);
+    Integer addpageView(ParamMap paramMap);
 }

@@ -1,89 +1,65 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.blog.dao.ArticleMapper" >
-  <resultMap id="BaseResultMap" type="com.blog.pojo.Article" >
-    <constructor >
-      <idArg column="aid" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <idArg column="id" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="title" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="category_id" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="create_time" jdbcType="BIGINT" javaType="java.lang.Long" />
-      <arg column="delete_time" jdbcType="BIGINT" javaType="java.lang.Long" />
-      <arg column="update_time" jdbcType="BIGINT" javaType="java.lang.Long" />
-      <arg column="publish_time" jdbcType="BIGINT" javaType="java.lang.Long" />
-      <arg column="status" jdbcType="BIT" javaType="java.lang.Boolean" />
-      <arg column="pageview" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="is_encrypt" jdbcType="BIT" javaType="java.lang.Boolean" />
-    </constructor>
+  <resultMap id="ArticleMap" type="com.blog.model.Article">
+    <id column="aid" property="aid" />
+    <id column="id" property="id" />
+    <result column="title" property="title" />
+    <result column="category_id" property="categoryId" />
+    <result column="create_time" property="createTime" />
+    <result column="delete_time" property="deleteTime" />
+    <result column="update_time" property="updateTime"  />
+    <result column="publish_time" property="publishTime"  />
+    <result column="status" property="status"  />
+    <result column="pageView" property="pageView" />
+    <result column="is_encrypt" property="isEncrypt"/>
+    <result column="content" property="content"  />
+    <result column="html_content" property="htmlContent" />
+    <result column="cover" property="cover"  />
+    <result column="sub_message" property="subMessage"  />
+    <association property="categories" javaType="com.blog.model.Category">
+      <id column="cgId" property="id" />
+      <result column="cgName" property="name"  />
+    </association>
+    <collection property="tags" ofType="com.blog.model.Tag">
+      <id column="tagId" property="id" />
+      <result column="tagName" property="name"  />
+    </collection>
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.blog.pojo.ArticleWithBLOBs" >
-    <constructor >
-      <idArg column="aid" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <idArg column="id" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="title" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="category_id" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="create_time" jdbcType="BIGINT" javaType="java.lang.Long" />
-      <arg column="delete_time" jdbcType="BIGINT" javaType="java.lang.Long" />
-      <arg column="update_time" jdbcType="BIGINT" javaType="java.lang.Long" />
-      <arg column="publish_time" jdbcType="BIGINT" javaType="java.lang.Long" />
-      <arg column="status" jdbcType="BIT" javaType="java.lang.Boolean" />
-      <arg column="pageview" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="is_encrypt" jdbcType="BIT" javaType="java.lang.Boolean" />
-      <arg column="content" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
-      <arg column="html_content" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
-      <arg column="cover" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
-      <arg column="sub_message" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
-    </constructor>
-  </resultMap>
-  <sql id="Base_Column_List" >
-    aid, id, title, category_id, create_time, delete_time, update_time, publish_time, 
-    status, pageview, is_encrypt
-  </sql>
-  <sql id="Blob_Column_List" >
-    content, html_content, cover, sub_message
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.blog.pojo.ArticleKey" >
-    select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from article
-    where aid = #{aid,jdbcType=INTEGER}
-      and id = #{id,jdbcType=VARCHAR}
-  </select>
-  <select id="selectByList" resultMap="ResultMapWithBLOBs" parameterType="com.blog.util.ParamMap" >
-    select
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from article
-    limit #{page,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
-  </select>
+
   <select id="selectByAllcount" resultType="java.lang.Integer" >
     select
     count(0)
     from article
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="com.blog.pojo.ArticleKey" >
-    delete from article
-    where aid = #{aid,jdbcType=INTEGER}
-      and id = #{id,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.blog.pojo.ArticleWithBLOBs">
-    insert into article (aid, id, title, 
-      category_id, create_time, delete_time, 
-      update_time, publish_time, status, 
-      pageview, is_encrypt, content, 
+
+  <select id="selectList" resultMap="ArticleMap">
+    select 
+    a.title, a.publish_time, a.pageview, a.sub_message,
+    a.id,c.id as tagId,c.name as tagName,a.cgId,a.cgName
+    from (select a.id,a.title, a.publish_time, a.pageview, a.sub_message,b.name as cgName,b.id as cgId from Article a left join category b on a.category_id=b.id and b.`status`=1 where a.`status`=1) a
+    left join article_tag_mapper b
+    on a.id=b.article_id
+    left join tag c
+    on b.tag_id=c.id and c.status=1
+    limit #{page,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insert1" parameterType="com.blog.model.Article">
+    insert into article (aid, id, title,
+      category_id, create_time, delete_time,
+      update_time, publish_time, status,
+      pageview, is_encrypt, content,
       html_content, cover, sub_message
       )
-    values (#{aid,jdbcType=INTEGER}, #{id,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+    values (#{aid,jdbcType=INTEGER}, #{id,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},
       #{categoryId,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, #{deleteTime,jdbcType=BIGINT},
       #{updateTime,jdbcType=BIGINT}, #{publishTime,jdbcType=BIGINT}, #{status,jdbcType=BIT},
-      #{pageview,jdbcType=INTEGER}, #{isEncrypt,jdbcType=BIT}, #{content,jdbcType=LONGVARCHAR}, 
+      #{pageView,jdbcType=INTEGER}, #{isEncrypt,jdbcType=BIT}, #{content,jdbcType=LONGVARCHAR},
       #{htmlContent,jdbcType=LONGVARCHAR}, #{cover,jdbcType=LONGVARCHAR}, #{subMessage,jdbcType=LONGVARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.blog.pojo.ArticleWithBLOBs" >
+  <insert id="insert" parameterType="com.blog.model.Article" >
     insert into article
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="aid != null" >
@@ -113,7 +89,7 @@
       <if test="status != null" >
         status,
       </if>
-      <if test="pageview != null" >
+      <if test="pageView != null" >
         pageview,
       </if>
       <if test="isEncrypt != null" >
@@ -160,7 +136,7 @@
       <if test="status != null" >
         #{status,jdbcType=BIT},
       </if>
-      <if test="pageview != null" >
+      <if test="pageView != null" >
         #{pageview,jdbcType=INTEGER},
       </if>
       <if test="isEncrypt != null" >
@@ -180,82 +156,26 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.blog.pojo.ArticleWithBLOBs" >
+
+  <select id="selectDetailById" resultMap="ArticleMap">
+    select
+    a.title, a.publish_time, a.pageview, a.sub_message,
+    a.id,c.id as tagId,c.name as tagName,a.cgId,a.cgName
+    from (
+        select a.id,a.title, a.publish_time, a.pageview,
+            a.sub_message,b.name as cgName,b.id as cgId
+        from (select * from Article where id=#{id,jdbcType=VARCHAR}) a left join category b
+        on a.category_id=b.id and b.`status`=1
+        where a.`status`=1) a
+    left join article_tag_mapper b
+    on a.id=b.article_id
+    left join tag c
+    on b.tag_id=c.id and c.status=1
+  </select>
+
+  <update id="addpageView" parameterType="com.blog.util.ParamMap">
     update article
-    <set >
-      <if test="title != null" >
-        title = #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="categoryId != null" >
-        category_id = #{categoryId,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
-      </if>
-      <if test="deleteTime != null" >
-        delete_time = #{deleteTime,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
-      </if>
-      <if test="publishTime != null" >
-        publish_time = #{publishTime,jdbcType=INTEGER},
-      </if>
-      <if test="status != null" >
-        status = #{status,jdbcType=BIT},
-      </if>
-      <if test="pageview != null" >
-        pageview = #{pageview,jdbcType=INTEGER},
-      </if>
-      <if test="isEncrypt != null" >
-        is_encrypt = #{isEncrypt,jdbcType=BIT},
-      </if>
-      <if test="content != null" >
-        content = #{content,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="htmlContent != null" >
-        html_content = #{htmlContent,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="cover != null" >
-        cover = #{cover,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="subMessage != null" >
-        sub_message = #{subMessage,jdbcType=LONGVARCHAR},
-      </if>
-    </set>
-    where aid = #{aid,jdbcType=INTEGER}
-      and id = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.blog.pojo.ArticleWithBLOBs" >
-    update article
-    set title = #{title,jdbcType=VARCHAR},
-      category_id = #{categoryId,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER},
-      delete_time = #{deleteTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
-      publish_time = #{publishTime,jdbcType=INTEGER},
-      status = #{status,jdbcType=BIT},
-      pageview = #{pageview,jdbcType=INTEGER},
-      is_encrypt = #{isEncrypt,jdbcType=BIT},
-      content = #{content,jdbcType=LONGVARCHAR},
-      html_content = #{htmlContent,jdbcType=LONGVARCHAR},
-      cover = #{cover,jdbcType=LONGVARCHAR},
-      sub_message = #{subMessage,jdbcType=LONGVARCHAR}
-    where aid = #{aid,jdbcType=INTEGER}
-      and id = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.blog.pojo.Article" >
-    update article
-    set title = #{title,jdbcType=VARCHAR},
-      category_id = #{categoryId,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER},
-      delete_time = #{deleteTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
-      publish_time = #{publishTime,jdbcType=INTEGER},
-      status = #{status,jdbcType=BIT},
-      pageview = #{pageview,jdbcType=INTEGER},
-      is_encrypt = #{isEncrypt,jdbcType=BIT}
-    where aid = #{aid,jdbcType=INTEGER}
-      and id = #{id,jdbcType=VARCHAR}
+    set pageView = pageView+1
+    where id=#{id,jdbcType=VARCHAR}
   </update>
 </mapper>

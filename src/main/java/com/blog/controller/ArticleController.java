@@ -1,8 +1,7 @@
 package com.blog.controller;
 
-import com.blog.pojo.Article;
-import com.blog.pojo.ArticleWithBLOBs;
-import com.blog.pojo.QiNiu;
+
+import com.blog.model.*;
 import com.blog.service.AdminService;
 import com.blog.service.ArticleService;
 import com.blog.util.ParamMap;
@@ -58,14 +57,18 @@ public class ArticleController {
      * @Description 发布文章
      * @param article 文章信息
      * @return com.blog.util.Response
-    */ 
-    public Response publish(@RequestBody ArticleWithBLOBs articleWithBLOBs) {
-        articleWithBLOBs.setId("article"+ TimeUtil.timeToStr("YYYYMMddHHmmss",new Date()));
-        Long time=System.currentTimeMillis();
-        articleWithBLOBs.setCreateTime(time);
-        articleWithBLOBs.setUpdateTime(time);
+    */
+    public Response publish(@RequestBody Article article) {
+        String now=TimeUtil.timeToStr("YYYY-MM-dd HH:mm:ss",new Date());
+        //文章id
+        article.setId("article"+ TimeUtil.timeToStr("YYYYMMdd",new Date()));
+        //创建、修改时间
+        article.setCreateTime(now);
+        article.setUpdateTime(now);
+        article.setPageView(1);
         try{
-            if(articleService.insert(articleWithBLOBs)!=1){
+            //新增
+            if(articleService.insert(article)!=1){
                 throw new NullPointerException();
             }
         }catch (NullPointerException e){
@@ -75,20 +78,29 @@ public class ArticleController {
     };
 
     @RequestMapping(value = "w/article/list", method = RequestMethod.POST)
-    public Response publish(@RequestBody ParamMap paramMap) {
-        List<ArticleWithBLOBs> list=null;
+    public Response getList(@RequestBody ParamMap paramMap) {
+        List<Article> list=null;
+        //文章总数
         Integer count =0;
-        list=articleService.selectByList(paramMap);
-        List<Article> rlist=null;
-        for(ArticleWithBLOBs article:list){
-            article.setCreateTimeStr(TimeUtil.timeToStr(new Date(article.getCreateTime())));
-            rlist.add((Article) article);
-        }
+        //文章列表(分页)
+        list=articleService.selectList(paramMap);
         count=articleService.selectByAllcount();
-
         Response response=Response.newResponse();
         response.put("list",list);
         response.put("count",count);
+        return response;
+    };
+
+    @RequestMapping(value = "w/article", method = RequestMethod.POST)
+    public Response getDetail(@RequestBody ParamMap paramMap) {
+        Article article=null;
+        //文章总数
+
+        //文章列表(分页)
+        article=articleService.selectDetailById(paramMap);
+
+        Response response=Response.newResponse();
+        response.put("list",article);
         return response;
     };
 }

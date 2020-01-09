@@ -18,7 +18,7 @@ import java.util.Map;
 @CrossOrigin
 @Controller
 @ResponseBody
-public class AdminConroller {
+public class AdminController {
     @Resource
     private RedisUtil redisUtil;
     @Autowired

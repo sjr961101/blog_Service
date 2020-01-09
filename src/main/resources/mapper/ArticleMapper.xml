@@ -18,8 +18,8 @@
     <result column="cover" property="cover"  />
     <result column="sub_message" property="subMessage"  />
     <association property="categories" javaType="com.blog.model.Category">
-      <id column="cgId" property="id" />
-      <result column="cgName" property="name"  />
+      <id column="cgId" property="categoryId" />
+      <result column="cgName" property="categoryName"  />
     </association>
     <collection property="tags" ofType="com.blog.model.Tag">
       <id column="tagId" property="id" />
@@ -37,11 +37,11 @@
     select 
     a.title, a.publish_time, a.pageview, a.sub_message,
     a.id,c.id as tagId,c.name as tagName,a.cgId,a.cgName
-    from (select a.id,a.title, a.publish_time, a.pageview, a.sub_message,b.name as cgName,b.id as cgId from Article a left join category b on a.category_id=b.id and b.`status`=1 where a.`status`=1) a
+    from (select a.id,a.title, a.publish_time, a.pageview, a.sub_message,b.name as cgName,b.id as cgId from Article a left join category b on a.category_id=b.id and b.`status`=0 where a.`status`=0) a
     left join article_tag_mapper b
     on a.id=b.article_id
     left join tag c
-    on b.tag_id=c.id and c.status=1
+    on b.tag_id=c.id and c.status=0
     limit #{page,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
   </select>
 
@@ -90,7 +90,7 @@
         status,
       </if>
       <if test="pageView != null" >
-        pageview,
+        pageView,
       </if>
       <if test="isEncrypt != null" >
         is_encrypt,
@@ -137,7 +137,7 @@
         #{status,jdbcType=BIT},
       </if>
       <if test="pageView != null" >
-        #{pageview,jdbcType=INTEGER},
+        #{pageView,jdbcType=INTEGER},
       </if>
       <if test="isEncrypt != null" >
         #{isEncrypt,jdbcType=BIT},
@@ -164,13 +164,13 @@
     from (
         select a.id,a.title, a.publish_time, a.pageview,
             a.sub_message,b.name as cgName,b.id as cgId
-        from (select * from Article where id=#{id,jdbcType=VARCHAR}) a left join category b
-        on a.category_id=b.id and b.`status`=1
+        from (select * from Article where id=#{id,jdbcType=VARCHAR} and `status`=0) a left join category b
+        on a.category_id=b.id and b.`status`=0
         where a.`status`=1) a
     left join article_tag_mapper b
     on a.id=b.article_id
     left join tag c
-    on b.tag_id=c.id and c.status=1
+    on b.tag_id=c.id and c.status=0
   </select>
 
   <update id="addpageView" parameterType="com.blog.util.ParamMap">

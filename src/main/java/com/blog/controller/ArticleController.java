@@ -61,7 +61,7 @@ public class ArticleController {
     public Response publish(@RequestBody Article article) {
         String now=TimeUtil.timeToStr("YYYY-MM-dd HH:mm:ss",new Date());
         //文章id
-        article.setId("article"+ TimeUtil.timeToStr("YYYYMMdd",new Date()));
+        article.setId("article"+ new Date().getTime());
         //创建、修改时间
         article.setCreateTime(now);
         article.setUpdateTime(now);

@@ -3,9 +3,9 @@ package com.blog.model;
 public class Category {
     private Integer aid;
 
-    private String id;
+    private String categoryId;
 
-    private String name;
+    private String categoryName;
 
     private String createTime;
 
@@ -28,20 +28,20 @@ public class Category {
         this.aid = aid;
     }
 
-    public String getId() {
-        return id;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public String getName() {
-        return name;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public String getCreateTime() {

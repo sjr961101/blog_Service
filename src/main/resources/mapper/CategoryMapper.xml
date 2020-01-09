@@ -1,51 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.blog.dao.CategoryMapper" >
-  <resultMap id="BaseResultMap" type="com.blog.pojo.Category" >
-    <constructor >
-      <idArg column="aid" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <idArg column="id" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="create_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="update_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="status" jdbcType="BIT" javaType="java.lang.Boolean" />
-      <arg column="article_count" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="can_del" jdbcType="BIT" javaType="java.lang.Boolean" />
-    </constructor>
+  <resultMap id="Category" type="com.blog.model.Category" >
+      <id column="aid" property="aid" />
+      <id column="id" property="categoryId" />
+      <result column="name" property="categoryName" />
+      <result column="create_time" property="createTime" />
+      <result column="update_time" property="updateTime" />
+      <result column="status" property="status" />
+      <result column="article_count" property="articleCount" />
+      <result column="can_del" property="canDel" />
   </resultMap>
-  <sql id="Base_Column_List" >
-    aid, id, name, create_time, update_time, status, article_count, can_del
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.blog.pojo.CategoryKey" >
-    select 
-    <include refid="Base_Column_List" />
-    from category
-    where aid = #{aid,jdbcType=INTEGER}
-      and id = #{id,jdbcType=VARCHAR}
-  </select>
+
+
   <delete id="deleteByPrimaryKey" parameterType="com.blog.pojo.CategoryKey" >
     delete from category
     where aid = #{aid,jdbcType=INTEGER}
       and id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.blog.pojo.Category" >
-    insert into category (aid, id, name, 
-      create_time, update_time, status, 
-      article_count, can_del)
-    values (#{aid,jdbcType=INTEGER}, #{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, #{status,jdbcType=BIT}, 
-      #{articleCount,jdbcType=INTEGER}, #{canDel,jdbcType=BIT})
-  </insert>
-  <insert id="insertSelective" parameterType="com.blog.pojo.Category" >
+
+  <insert id="insert" parameterType="com.blog.model.Category" >
     insert into category
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="aid != null" >
         aid,
       </if>
-      <if test="id != null" >
+      <if test="categoryId != null" >
         id,
       </if>
-      <if test="name != null" >
+      <if test="categoryName != null" >
         name,
       </if>
       <if test="createTime != null" >
@@ -68,10 +51,10 @@
       <if test="aid != null" >
         #{aid,jdbcType=INTEGER},
       </if>
-      <if test="id != null" >
+      <if test="categoryId != null" >
         #{id,jdbcType=VARCHAR},
       </if>
-      <if test="name != null" >
+      <if test="categoryName != null" >
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
@@ -91,6 +74,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.blog.pojo.Category" >
     update category
     <set >
@@ -116,6 +100,7 @@
     where aid = #{aid,jdbcType=INTEGER}
       and id = #{id,jdbcType=VARCHAR}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.blog.pojo.Category" >
     update category
     set name = #{name,jdbcType=VARCHAR},
@@ -127,4 +112,13 @@
     where aid = #{aid,jdbcType=INTEGER}
       and id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <select id="selectList" resultMap="Category" >
+    select
+      id,article_count,`name`,create_time,`status`,update_time,can_del
+    from category
+    where `status`=0
+    limit #{page,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+
 </mapper>

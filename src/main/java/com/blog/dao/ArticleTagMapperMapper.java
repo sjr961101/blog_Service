@@ -2,7 +2,7 @@ package com.blog.dao;
 
 import com.blog.pojo.articleTagMapper;
 
-public interface articleTagMapperMapper {
+public interface ArticleTagMapperMapper {
     int deleteByPrimaryKey(Integer id);
 
     int insert(articleTagMapper record);

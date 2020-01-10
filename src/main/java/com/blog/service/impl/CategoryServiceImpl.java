@@ -40,4 +40,16 @@ public class CategoryServiceImpl implements CategoryService {
         }
         return count;
     }
+
+    @Override
+    public int updateById(Category record) {
+        Integer count=0;
+        try{
+            count=categoryMapper.updateById(record);
+        }catch (Exception e){
+            LogUtils.error(e);
+            return -1;
+        }
+        return count;
+    }
 }

@@ -1,15 +1,15 @@
-package com.blog.dao;
+package com.blog.service;
 
 import com.blog.model.Tag;
+
 import com.blog.util.ParamMap;
 
 import java.util.List;
 
-public interface TagMapper {
-
+public interface TagService {
     int insert(Tag record);
 
     List<Tag> selectList(ParamMap paramMap);
 
-    int updateById(Tag record);
+    int update(Tag record);
 }

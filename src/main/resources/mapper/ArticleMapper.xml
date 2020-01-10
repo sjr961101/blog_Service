@@ -22,8 +22,8 @@
       <result column="cgName" property="categoryName"  />
     </association>
     <collection property="tags" ofType="com.blog.model.Tag">
-      <id column="tagId" property="id" />
-      <result column="tagName" property="name"  />
+      <id column="tagId" property="tagId" />
+      <result column="tagName" property="tagName"  />
     </collection>
   </resultMap>
 
@@ -34,10 +34,10 @@
   </select>
 
   <select id="selectList" resultMap="ArticleMap">
-    select 
-    a.title, a.publish_time, a.pageview, a.sub_message,
+    select
+    a.cover,a.title, a.publish_time, a.pageview, a.sub_message,
     a.id,c.id as tagId,c.name as tagName,a.cgId,a.cgName
-    from (select a.id,a.title, a.publish_time, a.pageview, a.sub_message,b.name as cgName,b.id as cgId from Article a left join category b on a.category_id=b.id and b.`status`=0 where a.`status`=0) a
+    from (select a.cover,a.id,a.title, a.publish_time, a.pageview, a.sub_message,b.name as cgName,b.id as cgId from Article a left join category b on a.category_id=b.id and b.`status`=0 where a.`status`=0) a
     left join article_tag_mapper b
     on a.id=b.article_id
     left join tag c
@@ -159,14 +159,14 @@
 
   <select id="selectDetailById" resultMap="ArticleMap">
     select
-    a.title, a.publish_time, a.pageview, a.sub_message,
+    a.html_content,a.title, a.publish_time, a.pageview, a.sub_message,
     a.id,c.id as tagId,c.name as tagName,a.cgId,a.cgName
     from (
-        select a.id,a.title, a.publish_time, a.pageview,
+        select a.html_content,a.id,a.title, a.publish_time, a.pageview,
             a.sub_message,b.name as cgName,b.id as cgId
         from (select * from Article where id=#{id,jdbcType=VARCHAR} and `status`=0) a left join category b
         on a.category_id=b.id and b.`status`=0
-        where a.`status`=1) a
+        where a.`status`=0) a
     left join article_tag_mapper b
     on a.id=b.article_id
     left join tag c

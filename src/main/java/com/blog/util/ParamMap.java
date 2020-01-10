@@ -16,7 +16,7 @@ public class ParamMap extends BaseMap {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final String PAGE_INDEX = "pageIndex";
+	private static final String PAGE_INDEX = "page";
 	private static final String PAGE_SIZE = "pageSize";
 	private static final String OFFSET = "offset";
 	private static final String LIMIT = "limit";

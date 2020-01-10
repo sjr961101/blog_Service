@@ -3,15 +3,15 @@ package com.blog.model;
 public class Tag {
     private Integer aid;
 
-    private String id;
+    private String tagId;
 
-    private String name;
+    private String tagName;
 
     private String createTime;
 
     private String updateTime;
 
-    private Boolean status;
+    private Short status;
 
     private Integer articleCount;
 
@@ -26,20 +26,20 @@ public class Tag {
         this.aid = aid;
     }
 
-    public String getId() {
-        return id;
+    public String getTagId() {
+        return tagId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setTagId(String tagId) {
+        this.tagId = tagId;
     }
 
-    public String getName() {
-        return name;
+    public String getTagName() {
+        return tagName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTagName(String tagName) {
+        this.tagName = tagName;
     }
 
     public String getCreateTime() {
@@ -58,11 +58,11 @@ public class Tag {
         this.updateTime = updateTime;
     }
 
-    public Boolean getStatus() {
+    public Short getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Short status) {
         this.status = status;
     }
 

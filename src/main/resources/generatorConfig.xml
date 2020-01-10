@@ -78,7 +78,7 @@
             <property name="modelOnly" value="false"/>
             <property name="useActualColumnNames" value="false"/>
         </table>
-        <table tableName="article_tag_mapper" domainObjectName="articleTagMapper"
+        <table tableName="article_tag_mapper" domainObjectName="articleTag"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

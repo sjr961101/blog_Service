@@ -11,7 +11,7 @@ public class Category {
 
     private String updateTime;
 
-    private Boolean status;
+    private Short status;
 
     private Integer articleCount;
 
@@ -60,11 +60,11 @@ public class Category {
         this.updateTime = updateTime;
     }
 
-    public Boolean getStatus() {
+    public Short getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Short status) {
         this.status = status;
     }
 

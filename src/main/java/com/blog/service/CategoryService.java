@@ -9,4 +9,6 @@ public interface CategoryService {
     List<Category> selectList(ParamMap paramMap);
 
     int insert(Category record);
+
+    int updateById(Category record);
 }

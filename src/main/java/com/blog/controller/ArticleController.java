@@ -39,7 +39,11 @@ public class ArticleController {
      * @param bucket
      * @return com.blog.pojo.QiNiu
     */
-    public QiNiu getToken(@RequestBody String bucket) {
+    public QiNiu getToken(@RequestBody ParamMap paramMap) {
+        String bucket=paramMap.get("bucket").toString();
+        if(bucket.equals("")||bucket==null){
+            bucket="our-blog";
+        }
         QiNiu qiNiu = new QiNiu();
         String accessKey = this.accessKey;
         String secretKey = this.secretKey;
@@ -49,6 +53,7 @@ public class ArticleController {
         String upToken = auth.uploadToken(bucket,null, expireSeconds,putPolicy);
         qiNiu.setKey(UUID.randomUUID().toString().replaceAll("\\-", ""));
         qiNiu.setToken(upToken);
+        qiNiu.setUrl("http://q3j78pe3m.bkt.clouddn.com/");
         return qiNiu;
     };
 
@@ -59,26 +64,33 @@ public class ArticleController {
      * @return com.blog.util.Response
     */
     public Response publish(@RequestBody Article article) {
-        String now=TimeUtil.timeToStr("YYYY-MM-dd HH:mm:ss",new Date());
+        String now=Long.toString(new Date().getTime());
         //文章id
         article.setId("article"+ new Date().getTime());
         //创建、修改时间
         article.setCreateTime(now);
         article.setUpdateTime(now);
+        article.setPublishTime(now);
         article.setPageView(1);
-        try{
-            //新增
-            if(articleService.insert(article)!=1){
-                throw new NullPointerException();
-            }
-        }catch (NullPointerException e){
-            return Response.newResponse().put("code",666).put("message","发布失败");
+        //新增
+        switch (articleService.insert(article)){
+            case 0:
+                Response.newResponse().put("code","666").put("message","新增失败");
+                break;
+            case 1:
+                break;
+            case -1:
+
+                break;
         }
+
+
         return Response.newResponse();
     };
 
     @RequestMapping(value = "w/article/list", method = RequestMethod.POST)
     public Response getList(@RequestBody ParamMap paramMap) {
+        paramMap.put("page",(int)paramMap.get("page")*(int)paramMap.get("pageSize"));
         List<Article> list=null;
         //文章总数
         Integer count =0;
@@ -94,13 +106,19 @@ public class ArticleController {
     @RequestMapping(value = "w/article", method = RequestMethod.POST)
     public Response getDetail(@RequestBody ParamMap paramMap) {
         Article article=null;
-        //文章总数
-
-        //文章列表(分页)
         article=articleService.selectDetailById(paramMap);
-
+        Date d=new Date(Long.parseLong(article.getPublishTime()));
+        article.setPublishTime(TimeUtil.timeToStr(d));
         Response response=Response.newResponse();
         response.put("list",article);
         return response;
     };
+
+//    @RequestMapping(value = "test", method = RequestMethod.POST)
+//    public Response test(@RequestBody ArticleTag paramMap) {
+//        paramMap.setCreateTime(String.valueOf(new Date().getTime()));
+//        Integer i=articleService.relationInsert(paramMap);
+//        Response response=Response.newResponse();
+//        return response.put("count",i);
+//    };
 }

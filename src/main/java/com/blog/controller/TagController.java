@@ -1,8 +1,7 @@
 package com.blog.controller;
 
-import com.blog.model.Article;
-import com.blog.model.Category;
-import com.blog.service.CategoryService;
+import com.blog.model.Tag;
+import com.blog.service.TagService;
 import com.blog.util.LogUtils;
 import com.blog.util.ParamMap;
 import com.blog.util.Response;
@@ -17,28 +16,27 @@ import java.util.List;
 @CrossOrigin
 @Controller
 @ResponseBody
-public class CategoryController {
-
+public class TagController {
     @Autowired
-    private CategoryService categoryService;
+    private TagService tagService;
 
-    @RequestMapping(value = "w/category/list", method = RequestMethod.POST)
+    @RequestMapping(value = "w/tag/list", method = RequestMethod.POST)
     public Response getList(@RequestBody ParamMap paramMap) {
-        List<Category> list=null;
-        list=categoryService.selectList(paramMap);
+        List<Tag> list=null;
+        list=tagService.selectList(paramMap);
         Response response=Response.newResponse();
-        response.put("categoryList",list);
+        response.put("tagList",list);
         return response;
     };
 
-    @RequestMapping(value = "a/category/add", method = RequestMethod.POST)
-    public Response insert(@RequestBody Category category) {
+    @RequestMapping(value = "a/tag/add", method = RequestMethod.POST)
+    public Response insert(@RequestBody Tag tag) {
         String time=String.valueOf(new Date().getTime());
-        category.setCategoryId("category"+time);
-        category.setCreateTime(time);
-        category.setUpdateTime(time);
+        tag.setTagId("tag"+time);
+        tag.setUpdateTime(time);
+        tag.setCreateTime(time);
         try{
-            if(categoryService.insert(category)!=1) {
+            if(tagService.insert(tag)!=1) {
                 throw new NullPointerException();
             }
         }catch (NullPointerException e){
@@ -47,16 +45,15 @@ public class CategoryController {
         return Response.newResponse();
     };
 
-    @RequestMapping(value = "a/category/modify", method = RequestMethod.POST)
-    public Response update(@RequestBody Category category) {
+    @RequestMapping(value = "a/tag/modify", method = RequestMethod.POST)
+    public Response update(@RequestBody Tag tag) {
         try{
-            switch (categoryService.updateById(category)){
+            switch (tagService.update(tag)){
                 case -1:
                     throw new SQLException();
                 case 0:
                     throw new NullPointerException();
             }
-
         }catch (SQLException e){
             LogUtils.debug(this.getClass().getName()+"update");
             return Response.newResponse().put("code",666).put("message","分类修改失败,数据错误");
@@ -66,11 +63,11 @@ public class CategoryController {
         return Response.newResponse();
     };
 
-    @RequestMapping(value = "a/category/delete", method = RequestMethod.POST)
-    public Response delete(@RequestBody Category category) {
-        category.setStatus((short) 1);
+    @RequestMapping(value = "a/tag/delete", method = RequestMethod.POST)
+    public Response delete(@RequestBody Tag tag) {
+        tag.setStatus((short) 1);
         try{
-            switch (categoryService.updateById(category)){
+            switch (tagService.update(tag)){
                 case -1:
                     throw new SQLException();
                 case 0:

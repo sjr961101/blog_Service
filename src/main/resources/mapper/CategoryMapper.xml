@@ -12,12 +12,30 @@
       <result column="can_del" property="canDel" />
   </resultMap>
 
+  <update id="updateById" parameterType="com.blog.model.Category" >
+    update category
+    <set >
+      <if test="categoryName != null" >
+        name = #{categoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="canDel != null" >
+        can_del = #{canDel,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{categoryId,jdbcType=VARCHAR}
+    and can_del= 1
+  </update>
 
-  <delete id="deleteByPrimaryKey" parameterType="com.blog.pojo.CategoryKey" >
-    delete from category
-    where aid = #{aid,jdbcType=INTEGER}
-      and id = #{id,jdbcType=VARCHAR}
-  </delete>
+  <select id="selectList" resultMap="Category" >
+    select
+      id,article_count,`name`,create_time,`status`,update_time,can_del
+    from category
+    where `status`=0
+    limit #{page,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
 
   <insert id="insert" parameterType="com.blog.model.Category" >
     insert into category
@@ -52,10 +70,10 @@
         #{aid,jdbcType=INTEGER},
       </if>
       <if test="categoryId != null" >
-        #{id,jdbcType=VARCHAR},
+        #{categoryId,jdbcType=VARCHAR},
       </if>
       <if test="categoryName != null" >
-        #{name,jdbcType=VARCHAR},
+        #{categoryName,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=INTEGER},
@@ -64,7 +82,7 @@
         #{updateTime,jdbcType=INTEGER},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=BIT},
+        #{status,jdbcType=SMALLINT},
       </if>
       <if test="articleCount != null" >
         #{articleCount,jdbcType=INTEGER},
@@ -74,51 +92,5 @@
       </if>
     </trim>
   </insert>
-
-  <update id="updateByPrimaryKeySelective" parameterType="com.blog.pojo.Category" >
-    update category
-    <set >
-      <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=INTEGER},
-      </if>
-      <if test="status != null" >
-        status = #{status,jdbcType=BIT},
-      </if>
-      <if test="articleCount != null" >
-        article_count = #{articleCount,jdbcType=INTEGER},
-      </if>
-      <if test="canDel != null" >
-        can_del = #{canDel,jdbcType=BIT},
-      </if>
-    </set>
-    where aid = #{aid,jdbcType=INTEGER}
-      and id = #{id,jdbcType=VARCHAR}
-  </update>
-
-  <update id="updateByPrimaryKey" parameterType="com.blog.pojo.Category" >
-    update category
-    set name = #{name,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
-      status = #{status,jdbcType=BIT},
-      article_count = #{articleCount,jdbcType=INTEGER},
-      can_del = #{canDel,jdbcType=BIT}
-    where aid = #{aid,jdbcType=INTEGER}
-      and id = #{id,jdbcType=VARCHAR}
-  </update>
-
-  <select id="selectList" resultMap="Category" >
-    select
-      id,article_count,`name`,create_time,`status`,update_time,can_del
-    from category
-    where `status`=0
-    limit #{page,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
-  </select>
 
 </mapper>

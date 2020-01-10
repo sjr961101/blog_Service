@@ -1,6 +1,5 @@
 package com.blog.controller;
 
-import com.blog.model.Article;
 import com.blog.model.Category;
 import com.blog.service.CategoryService;
 import com.blog.util.LogUtils;
@@ -17,12 +16,22 @@ import java.util.List;
 @CrossOrigin
 @Controller
 @ResponseBody
+/**
+ * @Description: 分类方法
+ * @Author: 沈俊仁
+ * @Date:  2020.01
+*/
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
 
     @RequestMapping(value = "w/category/list", method = RequestMethod.POST)
+    /**
+     * @Description todo 查询分类
+     * @param paramMap
+     * @return com.blog.util.Response
+    */
     public Response getList(@RequestBody ParamMap paramMap) {
         List<Category> list=null;
         list=categoryService.selectList(paramMap);
@@ -32,6 +41,11 @@ public class CategoryController {
     };
 
     @RequestMapping(value = "a/category/add", method = RequestMethod.POST)
+    /**
+     * @Description todo 添加分类
+     * @param category
+     * @return com.blog.util.Response
+    */
     public Response insert(@RequestBody Category category) {
         String time=String.valueOf(new Date().getTime());
         category.setCategoryId("category"+time);
@@ -48,6 +62,11 @@ public class CategoryController {
     };
 
     @RequestMapping(value = "a/category/modify", method = RequestMethod.POST)
+    /**
+     * @Description todo 修改分类
+     * @param category
+     * @return com.blog.util.Response
+    */
     public Response update(@RequestBody Category category) {
         try{
             switch (categoryService.updateById(category)){
@@ -67,6 +86,11 @@ public class CategoryController {
     };
 
     @RequestMapping(value = "a/category/delete", method = RequestMethod.POST)
+    /**
+     * @Description TODO 删除分类
+     * @param category
+     * @return com.blog.util.Response
+    */
     public Response delete(@RequestBody Category category) {
         category.setStatus((short) 1);
         try{
@@ -76,7 +100,6 @@ public class CategoryController {
                 case 0:
                     throw new NullPointerException();
             }
-
         }catch (SQLException e){
             LogUtils.debug(this.getClass().getName()+"update");
             return Response.newResponse().put("code",666).put("message","分类删除失败,数据错误");

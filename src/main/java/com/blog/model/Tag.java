@@ -18,6 +18,16 @@ public class Tag {
     public Tag() {
     }
 
+    public Tag(Integer aid, String tagId, String tagName, String createTime, String updateTime, Short status, Integer articleCount) {
+        this.aid = aid;
+        this.tagId = tagId;
+        this.tagName = tagName;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.status = status;
+        this.articleCount = articleCount;
+    }
+
     public Integer getAid() {
         return aid;
     }

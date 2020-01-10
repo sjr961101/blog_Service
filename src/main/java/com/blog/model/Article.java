@@ -26,6 +26,26 @@ public class Article {
     public Article() {
     }
 
+    public Article(Integer aid, String id, String title, String categoryId, String createTime, String deleteTime, String updateTime, String publishTime, Short status, String content, String htmlContent, String cover, String subMessage, Integer pageView, Short isEncrypt, List<Tag> tags, Category categories) {
+        this.aid = aid;
+        this.id = id;
+        this.title = title;
+        this.categoryId = categoryId;
+        this.createTime = createTime;
+        this.deleteTime = deleteTime;
+        this.updateTime = updateTime;
+        this.publishTime = publishTime;
+        this.status = status;
+        this.content = content;
+        this.htmlContent = htmlContent;
+        this.cover = cover;
+        this.subMessage = subMessage;
+        this.pageView = pageView;
+        this.isEncrypt = isEncrypt;
+        this.tags = tags;
+        this.categories = categories;
+    }
+
     public Integer getAid() {
         return aid;
     }

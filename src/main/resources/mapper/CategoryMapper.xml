@@ -34,7 +34,6 @@
       id,article_count,`name`,create_time,`status`,update_time,can_del
     from category
     where `status`=0
-    limit #{page,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
   </select>
 
   <insert id="insert" parameterType="com.blog.model.Category" >

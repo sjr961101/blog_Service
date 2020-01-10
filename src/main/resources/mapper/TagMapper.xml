@@ -20,7 +20,6 @@
     <include refid="Base_Column_List" />
     from tag
     where `status`=0
-    limit #{page,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
   </select>
 
   <insert id="insert" parameterType="com.blog.model.Tag" >

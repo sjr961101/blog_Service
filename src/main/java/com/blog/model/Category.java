@@ -20,6 +20,17 @@ public class Category {
     public Category() {
     }
 
+    public Category(Integer aid, String categoryId, String categoryName, String createTime, String updateTime, Short status, Integer articleCount, Boolean canDel) {
+        this.aid = aid;
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.status = status;
+        this.articleCount = articleCount;
+        this.canDel = canDel;
+    }
+
     public Integer getAid() {
         return aid;
     }

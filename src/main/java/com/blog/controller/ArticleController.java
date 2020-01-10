@@ -1,8 +1,9 @@
 package com.blog.controller;
 
 
-import com.blog.model.*;
-import com.blog.service.AdminService;
+
+import com.blog.model.Article;
+import com.blog.model.QiNiu;
 import com.blog.service.ArticleService;
 import com.blog.util.ParamMap;
 import com.blog.util.RedisUtil;
@@ -16,16 +17,28 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
 
 @CrossOrigin
 @Controller
 @ResponseBody
+/**
+ * @Description: 文章方法
+ * @Author: 沈俊仁
+ * @Date:  2020.01
+*/
 public class ArticleController {
     @Value("${qiniu.accessKey}")
     private  String  accessKey;
     @Value("${qiniu.secretKey}")
     private  String  secretKey;
+    @Value("${qiniu.url}")
+    private  String  url;
+    @Value("${qiniu.bucket}")
+    private  String  bucket;
 
     @Resource
     private RedisUtil redisUtil;
@@ -36,24 +49,22 @@ public class ArticleController {
     @RequestMapping(value = "a/qiniu/token", method = RequestMethod.POST)
     /**
      * @Description 获取 七牛云的 token
-     * @param bucket
+     * @param bucket 仓库名称
      * @return com.blog.pojo.QiNiu
     */
     public QiNiu getToken(@RequestBody ParamMap paramMap) {
         String bucket=paramMap.get("bucket").toString();
         if(bucket.equals("")||bucket==null){
-            bucket="our-blog";
+            bucket=this.bucket;
         }
         QiNiu qiNiu = new QiNiu();
-        String accessKey = this.accessKey;
-        String secretKey = this.secretKey;
         long expireSeconds = 600;   //过期时间
         StringMap putPolicy = new StringMap();
-        Auth auth = Auth.create(accessKey, secretKey);
+        Auth auth = Auth.create(this.accessKey, this.secretKey);
         String upToken = auth.uploadToken(bucket,null, expireSeconds,putPolicy);
         qiNiu.setKey(UUID.randomUUID().toString().replaceAll("\\-", ""));
         qiNiu.setToken(upToken);
-        qiNiu.setUrl("http://q3j78pe3m.bkt.clouddn.com/");
+        qiNiu.setUrl(this.url);
         return qiNiu;
     };
 
@@ -72,23 +83,20 @@ public class ArticleController {
         article.setUpdateTime(now);
         article.setPublishTime(now);
         article.setPageView(1);
+        Response response=Response.newResponse();
         //新增
-        switch (articleService.insert(article)){
-            case 0:
-                Response.newResponse().put("code","666").put("message","新增失败");
-                break;
-            case 1:
-                break;
-            case -1:
-
-                break;
+        if(articleService.insert(article)!=1){
+            response.put("code","666").put("message","新增失败");
         }
-
-
-        return Response.newResponse();
+        return response;
     };
 
     @RequestMapping(value = "w/article/list", method = RequestMethod.POST)
+    /**
+     * @Description //TODO 分页查询文章
+     * @param paramMap
+     * @return com.blog.util.Response
+    */
     public Response getList(@RequestBody ParamMap paramMap) {
         paramMap.put("page",(int)paramMap.get("page")*(int)paramMap.get("pageSize"));
         List<Article> list=null;
@@ -104,6 +112,11 @@ public class ArticleController {
     };
 
     @RequestMapping(value = "w/article", method = RequestMethod.POST)
+    /**
+     * @Description //TODO 查看文章详情
+     * @param paramMap
+     * @return com.blog.util.Response
+    */
     public Response getDetail(@RequestBody ParamMap paramMap) {
         Article article=null;
         article=articleService.selectDetailById(paramMap);

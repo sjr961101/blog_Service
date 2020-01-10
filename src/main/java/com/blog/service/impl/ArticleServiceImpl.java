@@ -20,10 +20,10 @@ import java.util.List;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
-    @Autowired
+    @Autowired(required = false)
     ArticleMapper articleMapper;
 
-    @Autowired
+    @Autowired(required = false)
     ArticleTagMapper articleTagMapper;
 
     @Override
@@ -32,6 +32,7 @@ public class ArticleServiceImpl implements ArticleService {
         try{
             count=articleMapper.insert(record);
             if(count==1&&record.getTags()!=null){
+                //查看文章中的标签将对于关系存贮
                 List<Tag> list=record.getTags();
                 ArticleTag articleTag=null;
                 for(Tag tag:list){

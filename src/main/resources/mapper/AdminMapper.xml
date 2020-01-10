@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.blog.dao.AdminMapper">
-  <resultMap id="BaseResultMap" type="com.blog.pojo.Admin">
+  <resultMap id="BaseResultMap" type="com.blog.model.Admin">
     <constructor>
       <idArg column="aid" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <idArg column="user_id" javaType="java.lang.String" jdbcType="VARCHAR" />
@@ -19,35 +19,14 @@
     aid, user_id, username, password, salt, access_token, token_expires_in, create_time, 
     status, last_login_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="com.blog.pojo.AdminKey" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from admin
-    where aid = #{aid,jdbcType=INTEGER}
-      and user_id = #{userId,jdbcType=VARCHAR}
-  </select>
-  <select id="selectByName" parameterType="com.blog.pojo.Admin" resultMap="BaseResultMap">
+
+  <select id="selectByName" parameterType="com.blog.model.Admin" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from admin
     where username = #{username,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="com.blog.pojo.AdminKey">
-    delete from admin
-    where aid = #{aid,jdbcType=INTEGER}
-      and user_id = #{userId,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.blog.pojo.Admin">
-    insert into admin (aid, user_id, username, 
-      password, salt, access_token, 
-      token_expires_in, create_time, status, 
-      last_login_time)
-    values (#{aid,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
-      #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{accessToken,jdbcType=VARCHAR}, 
-      #{tokenExpiresIn,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, #{status,jdbcType=BIT}, 
-      #{lastLoginTime,jdbcType=INTEGER})
-  </insert>
-  <insert id="insertSelective" parameterType="com.blog.pojo.Admin">
+  <insert id="insertSelective" parameterType="com.blog.model.Admin">
     insert into admin
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="aid != null">
@@ -114,7 +93,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.blog.pojo.Admin">
+  <update id="updateByPrimaryKeySelective" parameterType="com.blog.model.Admin">
     update admin
     <set>
       <if test="username != null">
@@ -145,17 +124,5 @@
     where aid = #{aid,jdbcType=INTEGER}
       and user_id = #{userId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.blog.pojo.Admin">
-    update admin
-    set username = #{username,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      salt = #{salt,jdbcType=VARCHAR},
-      access_token = #{accessToken,jdbcType=VARCHAR},
-      token_expires_in = #{tokenExpiresIn,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=INTEGER},
-      status = #{status,jdbcType=BIT},
-      last_login_time = #{lastLoginTime,jdbcType=INTEGER}
-    where aid = #{aid,jdbcType=INTEGER}
-      and user_id = #{userId,jdbcType=VARCHAR}
-  </update>
+
 </mapper>

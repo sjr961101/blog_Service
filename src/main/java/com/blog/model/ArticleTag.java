@@ -18,6 +18,13 @@ public class ArticleTag {
         this.createTime = createTime;
     }
 
+    public ArticleTag(Integer id, String articleId, String tagId, String createTime) {
+        this.id = id;
+        this.articleId = articleId;
+        this.tagId = tagId;
+        this.createTime = createTime;
+    }
+
     public Integer getId() {
         return id;
     }

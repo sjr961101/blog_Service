@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
-    @Autowired
+    @Autowired(required = false)
     private CategoryMapper categoryMapper;
 
     @Override

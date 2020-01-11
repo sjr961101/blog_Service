@@ -35,13 +35,14 @@
 
   <select id="selectList" resultMap="ArticleMap">
     select
-    a.cover,a.title, a.publish_time, a.pageview, a.sub_message,
+    a.cover,a.title, FROM_UNIXTIME(a.publish_time/1000,'%Y-%m-%d %H:%i:%s') as publish_time, a.pageview, a.sub_message,
     a.id,c.id as tagId,c.name as tagName,a.cgId,a.cgName
     from (select a.cover,a.id,a.title, a.publish_time, a.pageview, a.sub_message,b.name as cgName,b.id as cgId from Article a left join category b on a.category_id=b.id and b.`status`=0 where a.`status`=0) a
     left join article_tag_mapper b
     on a.id=b.article_id
     left join tag c
     on b.tag_id=c.id and c.status=0
+    order by publish_time desc
     limit #{page,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
   </select>
 
@@ -159,10 +160,10 @@
 
   <select id="selectDetailById" resultMap="ArticleMap">
     select
-    a.html_content,a.title, a.publish_time, a.pageview, a.sub_message,
+    a.cover,a.html_content,a.title, a.publish_time, a.pageview, a.sub_message,
     a.id,c.id as tagId,c.name as tagName,a.cgId,a.cgName
     from (
-        select a.html_content,a.id,a.title, a.publish_time, a.pageview,
+        select a.cover,a.html_content,a.id,a.title, a.publish_time, a.pageview,
             a.sub_message,b.name as cgName,b.id as cgId
         from (select * from Article where id=#{id,jdbcType=VARCHAR} and `status`=0) a left join category b
         on a.category_id=b.id and b.`status`=0

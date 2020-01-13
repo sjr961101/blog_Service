@@ -37,7 +37,7 @@
     select
     a.cover,a.title, FROM_UNIXTIME(a.publish_time/1000,'%Y-%m-%d %H:%i:%s') as publish_time, a.pageview, a.sub_message,
     a.id,c.id as tagId,c.name as tagName,a.cgId,a.cgName
-    from (select a.cover,a.id,a.title, a.publish_time, a.pageview, a.sub_message,b.name as cgName,b.id as cgId from Article a left join category b on a.category_id=b.id and b.`status`=0 where a.`status`=0) a
+    from (select a.cover,a.id,a.title, a.publish_time, a.pageview, a.sub_message,b.name as cgName,b.id as cgId from article a left join category b on a.category_id=b.id and b.`status`=0 where a.`status`=0) a
     left join article_tag_mapper b
     on a.id=b.article_id
     left join tag c
@@ -46,20 +46,6 @@
     limit #{page,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
   </select>
 
-  <insert id="insert1" parameterType="com.blog.model.Article">
-    insert into article (aid, id, title,
-      category_id, create_time, delete_time,
-      update_time, publish_time, status,
-      pageview, is_encrypt, content,
-      html_content, cover, sub_message
-      )
-    values (#{aid,jdbcType=INTEGER}, #{id,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},
-      #{categoryId,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, #{deleteTime,jdbcType=BIGINT},
-      #{updateTime,jdbcType=BIGINT}, #{publishTime,jdbcType=BIGINT}, #{status,jdbcType=BIT},
-      #{pageView,jdbcType=INTEGER}, #{isEncrypt,jdbcType=BIT}, #{content,jdbcType=LONGVARCHAR},
-      #{htmlContent,jdbcType=LONGVARCHAR}, #{cover,jdbcType=LONGVARCHAR}, #{subMessage,jdbcType=LONGVARCHAR}
-      )
-  </insert>
   <insert id="insert" parameterType="com.blog.model.Article" >
     insert into article
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -123,19 +109,19 @@
         #{categoryId,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=INTEGER},
+        #{createTime,jdbcType=VARCHAR},
       </if>
       <if test="deleteTime != null" >
-        #{deleteTime,jdbcType=INTEGER},
+        #{deleteTime,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=INTEGER},
+        #{updateTime,jdbcType=VARCHAR},
       </if>
       <if test="publishTime != null" >
-        #{publishTime,jdbcType=INTEGER},
+        #{publishTime,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=BIT},
+        #{status,jdbcType=SMALLINT},
       </if>
       <if test="pageView != null" >
         #{pageView,jdbcType=INTEGER},
@@ -165,7 +151,7 @@
     from (
         select a.cover,a.html_content,a.id,a.title, a.publish_time, a.pageview,
             a.sub_message,b.name as cgName,b.id as cgId
-        from (select * from Article where id=#{id,jdbcType=VARCHAR} and `status`=0) a left join category b
+        from (select * from article where id=#{id,jdbcType=VARCHAR} and `status`=0) a left join category b
         on a.category_id=b.id and b.`status`=0
         where a.`status`=0) a
     left join article_tag_mapper b
@@ -177,6 +163,31 @@
   <update id="addpageView" parameterType="com.blog.util.ParamMap">
     update article
     set pageView = pageView+1
+    where id=#{id,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateArticle" parameterType="com.blog.model.Article">
+    update article
+    <set>
+      <if test="title != null" >
+        title=#{title,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null" >
+        category_id=#{categoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteTime != null" >
+        delete_time=#{deleteTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time=#{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="publishTime != null" >
+        publish_time=#{publishTime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status=#{status,jdbcType=SMALLINT},
+      </if>
+    </set>
     where id=#{id,jdbcType=VARCHAR}
   </update>
 </mapper>

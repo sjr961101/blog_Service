@@ -17,4 +17,6 @@ public interface ArticleMapper {
     Article selectDetailById(ParamMap paramMap);
 
     Integer addpageView(ParamMap paramMap);
+
+    Integer updateArticle(Article article);
 }

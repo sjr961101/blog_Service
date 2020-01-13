@@ -90,6 +90,16 @@ public class ArticleServiceImpl implements ArticleService {
         return article;
     }
 
-
+    @Override
+    public Integer updateArticle(Article article) {
+        Integer count = 0;
+        try {
+            count = articleMapper.updateArticle(article);
+        } catch (Exception e) {
+            LogUtils.error(e);
+            return 0;
+        }
+        return count;
+    }
 
 }

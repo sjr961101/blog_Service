@@ -16,4 +16,6 @@ public interface ArticleService {
 
     Article selectDetailById(ParamMap paramMap);
 
+    Integer updateArticle(Article article);
+
 }

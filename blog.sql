@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : personal
+ Source Server         : 阿里云
  Source Server Type    : MySQL
- Source Server Version : 80018
- Source Host           : localhost:3306
+ Source Server Version : 80017
+ Source Host           : 101.132.109.226:3306
  Source Schema         : blog
 
  Target Server Type    : MySQL
- Target Server Version : 80018
+ Target Server Version : 80017
  File Encoding         : 65001
 
- Date: 09/01/2020 21:45:19
+ Date: 13/01/2020 15:34:14
 */
 
 SET NAMES utf8mb4;
@@ -37,11 +37,6 @@ CREATE TABLE `admin`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of admin
--- ----------------------------
-INSERT INTO `admin` VALUES (1, '2', '3', '666666', '5', '6', 7, 8, b'0', 9);
-
--- ----------------------------
 -- Table structure for article
 -- ----------------------------
 DROP TABLE IF EXISTS `article`;
@@ -50,9 +45,9 @@ CREATE TABLE `article`  (
   `id` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '文章id',
   `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文章标题',
   `category_id` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文章分类id',
-  `create_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建时间',
+  `create_time` varchar(13) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建时间',
   `delete_time` varchar(13) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '删除时间',
-  `update_time` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新时间',
+  `update_time` varchar(13) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新时间',
   `publish_time` varchar(13) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '发布时间',
   `status` tinyint(1) NULL DEFAULT 0 COMMENT '状态，0-正常（发布），1-删除，2-记录（待发布）',
   `content` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '内容',
@@ -63,21 +58,7 @@ CREATE TABLE `article`  (
   `is_encrypt` bit(1) NULL DEFAULT b'0' COMMENT '是否加密，0否，1是，默认0',
   PRIMARY KEY (`aid`, `id`) USING BTREE,
   UNIQUE INDEX `id`(`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of article
--- ----------------------------
-INSERT INTO `article` VALUES (1, 'article20200104163112', '文章', '1', '1578126672403', NULL, '1578126672403', NULL, 0, 'jsdafksdahfisdafoisdafosaifnosanfoinsaoifosaifsaofisafosaoisabfoisahfoihsaoifhsaohfisahfosao', '德萨付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付', 'sdafsdaf', '测试', 891, b'1');
-INSERT INTO `article` VALUES (2, 'article20200104173402', '文章1', '2', '1578130442673', NULL, '1578130442673', NULL, 0, 'jsdafksdahfisdafoisdafosaifnosanfoinsaoifosaifsaofisafosaoisabfoisahfoihsaoifhsaohfisahfosao', '德萨付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付', 'sdafsdaf', '测1试', 999, b'1');
-INSERT INTO `article` VALUES (3, 'article20200104173408', '文章2', '1', '1578130448499', NULL, '1578130448499', NULL, 0, 'jsdafksdahfisdafoisdafosaifnosanfoinsaoifosaifsaofisafosaoisabfoisahfoihsaoifhsaohfisahfosao', '德萨付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付', 'sdafsdaf', '测1试', 555, b'1');
-INSERT INTO `article` VALUES (4, 'article20200104173414', '文章3', NULL, '1578130454338', NULL, '1578130454338', NULL, 0, 'jsdafksdahfisdafoisdafosaifnosanfoinsaoifosaifsaofisafosaoisabfoisahfoihsaoifhsaohfisahfosao', '德萨付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付', 'sdafsdaf', '测1试', 333, b'1');
-INSERT INTO `article` VALUES (5, 'article20200104173416', '文章4', NULL, '1578130456502', NULL, '1578130456502', NULL, 0, 'jsdafksdahfisdafoisdafosaifnosanfoinsaoifosaifsaofisafosaoisabfoisahfoihsaoifhsaohfisahfosao', '德萨付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付', 'sdafsdaf', '测1试', 444, b'1');
-INSERT INTO `article` VALUES (6, 'article20200104173418', '文章5', NULL, '1578130458621', NULL, '1578130458621', NULL, 0, 'jsdafksdahfisdafoisdafosaifnosanfoinsaoifosaifsaofisafosaoisabfoisahfoihsaoifhsaohfvisahfosao', '德萨付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付付', 'sdafsdaf', '测1试', 1111111, b'1');
-INSERT INTO `article` VALUES (7, 'article20200107144723', '文章6', NULL, '1578379643049', NULL, '1578379643049', NULL, 0, 'jsdafksdahfisdafoisdafosaifnosanfoinsaoifosaifsaofisafosaoisabfoisahfoihsaoifhsaohfisahfosao', NULL, 'sdafsdaf', '测1试', 0, b'1');
-INSERT INTO `article` VALUES (8, 'article20200107145031', '阿斯顿', NULL, '1578379831658', NULL, '1578379831658', NULL, 0, '请问请问', '<p>请问请问</p>', '', '请问', 0, b'1');
-INSERT INTO `article` VALUES (11, 'article20200109', '文章9', NULL, '2020-01-09 21:17:24', NULL, '2020-01-09 21:17:24', NULL, NULL, 'jsdafksdahfisdafoisdafosaifnosanfoinsaoifosaifsaofisafosaoisabfoisahfoihsaoifhsaohfisahfosao', NULL, 'sdafsdaf', '测试9', 1, b'0');
-INSERT INTO `article` VALUES (13, 'article1578577056722', '文章10', NULL, '2020-01-09 21:37:36', NULL, '2020-01-09 21:37:36', NULL, 0, 'jsdafksdahfisdafoisdafosaifnosanfoinsaoifosaifsaofisafosaoisabfoisahfoihsaoifhsaohfisahfosao', NULL, 'sdafsdaf', '测试10', 1, b'0');
+) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for article_tag_mapper
@@ -87,16 +68,10 @@ CREATE TABLE `article_tag_mapper`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `article_id` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '文章id',
   `tag_id` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '标签id',
-  `create_time` int(13) NOT NULL COMMENT '创建时间',
+  `create_time` varchar(13) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `id`(`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of article_tag_mapper
--- ----------------------------
-INSERT INTO `article_tag_mapper` VALUES (1, 'article20200104163112', '1', 121414421);
-INSERT INTO `article_tag_mapper` VALUES (2, 'article20200104173402', '2', 1321321);
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for blog_config
@@ -130,14 +105,7 @@ CREATE TABLE `category`  (
   `can_del` bit(1) NOT NULL DEFAULT b'1' COMMENT '0表示不可删除，1表示可删除，默认1',
   PRIMARY KEY (`aid`, `id`) USING BTREE,
   UNIQUE INDEX `id`(`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of category
--- ----------------------------
-INSERT INTO `category` VALUES (1, '1', '测试分类', '1213214214', '20190101', b'0', 0, b'1');
-INSERT INTO `category` VALUES (2, '2', '测试分类2', '2141441', '20190101', b'1', 0, b'1');
-INSERT INTO `category` VALUES (3, '3', '对对对', '20190302', '20190302', b'0', 0, b'1');
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for comments
@@ -228,12 +196,6 @@ CREATE TABLE `tag`  (
   `article_count` int(11) NULL DEFAULT 0 COMMENT '该标签的文章数量',
   PRIMARY KEY (`aid`, `id`) USING BTREE,
   UNIQUE INDEX `id`(`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of tag
--- ----------------------------
-INSERT INTO `tag` VALUES (1, '1', '测试', '111111', '111111', b'0', 0);
-INSERT INTO `tag` VALUES (2, '2', '测试2', '222222', '22222', b'0', 0);
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

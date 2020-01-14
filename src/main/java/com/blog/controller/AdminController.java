@@ -53,9 +53,11 @@ public class AdminController {
         //返回信息
         Map data =new HashMap();
         //生成的token
-        String token=TokenUtil.produceToken(admin.getUsername());
+        String token=TokenUtil.produceToken(admin.getUserId());
         data.put("username",admin.getUsername());
-        data.put("access_token",token);
+        data.put("userId",admin.getUserId());
+        data.put("access_token",token);  //生产的token
+        data.put("isAuthor",1);  //是否是作者
         redisUtil.set(token, TimeUtil.timeToStr("HHmmss",new Date()));
         return Response.newResponse().setData(data);
     }

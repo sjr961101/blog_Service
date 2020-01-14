@@ -17,7 +17,7 @@ public class TagServiceImpl implements TagService {
 
 
     @Override
-    public int insert(Tag record) {
+    public Integer insert(Tag record) {
         Integer count=0;
         try{
             count=tagMapper.insert(record);
@@ -43,10 +43,26 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public int update(Tag record) {
+    public Integer update(Tag record) {
         Integer count=0;
         try{
             count=tagMapper.updateById(record);
+        }catch (Exception e){
+            LogUtils.error(e);
+            return -1;
+        }
+        return count;
+    }
+
+    @Override
+    public Integer delete(Tag tag) {
+        Integer count=0;
+        try{
+            if(tagMapper.delete(tag)==1){
+                count=1;
+            }else{
+                count=tagMapper.updateById(tag);
+            }
         }catch (Exception e){
             LogUtils.error(e);
             return -1;

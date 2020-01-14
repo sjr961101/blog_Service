@@ -98,12 +98,13 @@ public class ArticleController {
     */
     public Response getList(@RequestBody ParamMap paramMap) {
         paramMap.put("page",(int)paramMap.get("page")*(int)paramMap.get("pageSize"));
+        paramMap.put("status",0);
         List<Article> list=null;
         //文章总数
         Integer count =0;
         //文章列表(分页)
         list=articleService.selectList(paramMap);
-        count=articleService.selectByAllcount();
+        count=articleService.selectByAllcount(paramMap);
         Response response=Response.newResponse();
         response.put("list",list);
         response.put("count",count);
@@ -150,13 +151,18 @@ public class ArticleController {
 
 
     @RequestMapping(value = "a/article/modify", method = RequestMethod.POST)
+    /**
+     * @Description 修改文章
+     * @param article
+     * @return com.blog.util.Response
+    */
     public Response update(@RequestBody Article article) {
         String now=Long.toString(new Date().getTime());
         //修改时间
         article.setUpdateTime(now);
-        article.setPublishTime(now);
-        article.setStatus((short) 0);
-        article.setPageView(1);
+        if(article.getStatus()==0) {
+            article.setPublishTime(now);
+        }
         Response response=Response.newResponse();
         //修改
         if(articleService.updateArticle(article)!=1){
@@ -166,16 +172,23 @@ public class ArticleController {
     };
 
     @RequestMapping(value = "a/article/delete", method = RequestMethod.POST)
+    /**
+     * @Description 删除文章
+     * @param article
+     * @return com.blog.util.Response
+    */
     public Response delete(@RequestBody Article article) {
         String now=Long.toString(new Date().getTime());
         //修改时间
         article.setDeleteTime(now);
         article.setStatus((short) 1);
         Response response=Response.newResponse();
-        //删除
-        if(articleService.updateArticle(article)!=1){
+        //删除   第一次删除将文章状态变为删除状态，第二次删除则删掉记录
+        if(articleService.deleteArticle(article)!=1){
             response.put("code","666").put("message","删除失败");
         }
         return response;
     };
+
+
 }

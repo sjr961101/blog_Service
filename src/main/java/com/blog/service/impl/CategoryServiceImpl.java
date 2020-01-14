@@ -30,7 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public int insert(Category record) {
+    public Integer insert(Category record) {
         Integer count=0;
         try{
             count=categoryMapper.insert(record);
@@ -42,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public int updateById(Category record) {
+    public Integer updateById(Category record) {
         Integer count=0;
         try{
             count=categoryMapper.updateById(record);
@@ -52,4 +52,22 @@ public class CategoryServiceImpl implements CategoryService {
         }
         return count;
     }
+
+    @Override
+    public Integer deleteCategory(Category category) {
+        Integer count=0;
+        try{
+            if(categoryMapper.deleteCategory(category)==1){
+                count=1;
+            }else{
+                count=categoryMapper.updateById(category);
+            }
+        }catch (Exception e){
+            LogUtils.error(e);
+            return -1;
+        }
+        return count;
+    }
+
+
 }

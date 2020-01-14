@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.blog.dao.CommonMapper" >
+    <resultMap id="Common" type="com.blog.model.Common" >
+        <result column="publishCount" property="publishCount" />
+        <result column="draftsCount" property="draftsCount" />
+        <result column="deletedCount" property="deletedCount" />
+        <result column="categoryCount" property="categoryCount" />
+        <result column="tagCount" property="tagCount" />
+        <result column="commentsCount" property="commentsCount" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+     id, name, create_time, update_time, status, article_count
+  </sql>
+
+    <select id="statistics" resultMap="Common" >
+        SELECT
+	sum( publishCount ) as publishCount,
+	sum( draftsCount ) as draftsCount,
+	sum( deletedCount ) as deletedCount,
+	sum( categoryCount ) as categoryCount,
+	sum( tagCount ) as tagCount,
+	sum( commentsCount ) as commentsCount
+FROM
+	(
+	SELECT
+		count( 0 ) AS publishCount,
+		0 draftsCount,
+		0 deletedCount,
+		0 categoryCount,
+		0 tagCount,
+		0 commentsCount
+	FROM
+		article
+	WHERE
+		`status` = 0 UNION
+	SELECT
+		0 publishCount,
+		count( 0 ) AS draftsCount,
+		0 deletedCount,
+		0 categoryCount,
+		0 tagCount,
+		0 commentsCount
+	FROM
+		article
+	WHERE
+		`status` = 2 UNION
+	SELECT
+		0 publishCount,
+		0 draftsCount,
+		count( 0 ) AS deletedCount,
+		0 categoryCount,
+		0 tagCount,
+		0 commentsCount
+	FROM
+		article
+	WHERE
+		`status` = 1 UNION
+	SELECT
+		0 publishCount,
+		0 draftsCount,
+		0 deletedCount,
+		count( 0 ) AS categoryCount,
+		0 tagCount,
+		0 commentsCount
+	FROM
+		category
+	WHERE
+		`status` = 0 UNION
+	SELECT
+		0 publishCount,
+		0 draftsCount,
+		0 deletedCount,
+		0 categoryCount,
+		count( 0 ) AS tagCount,
+		0 commentsCount
+	FROM
+		tag
+	WHERE
+		`status` = 0 UNION
+	SELECT
+		0 publishCount,
+		0 draftsCount,
+		0 deletedCount,
+		0 categoryCount,
+		0 tagCount,
+		count( 0 ) AS commentsCount
+	FROM
+		comments
+	WHERE
+	`status` = 0
+	) common
+    </select>
+
+
+</mapper>

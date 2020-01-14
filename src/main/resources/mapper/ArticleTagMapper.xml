@@ -8,10 +8,12 @@
       <result column="create_time" property="createTime" />
   </resultMap>
 
-  <delete id="delete" parameterType="java.lang.Integer" >
+  <delete id="delete" parameterType="com.blog.model.ArticleTag" >
     delete from article_tag_mapper
-    where tag_id = #{tagId,jdbcType=VARCHAR}
-    and article_id = #{articleId,jdbcType=VARCHAR}
+    where article_id = #{articleId,jdbcType=VARCHAR}
+    <if test="tagId != null">
+    and tag_id = #{tagId,jdbcType=VARCHAR}
+    </if>
   </delete>
 
   <insert id="insert" parameterType="com.blog.model.ArticleTag" >

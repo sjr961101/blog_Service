@@ -10,12 +10,16 @@ public interface ArticleService {
 
     int insert(Article record);
 
-    Integer selectByAllcount();
+    Integer selectByAllcount(ParamMap paramMap);
 
     List<Article> selectList(ParamMap paramMap);
 
     Article selectDetailById(ParamMap paramMap);
 
     Integer updateArticle(Article article);
+
+    Integer deleteArticle(Article article);
+
+    Integer deleteTag(ArticleTag articleTag);
 
 }

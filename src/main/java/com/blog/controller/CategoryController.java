@@ -35,6 +35,7 @@ public class CategoryController {
     public Response getList(@RequestBody ParamMap paramMap) {
         List<Category> list=null;
         list=categoryService.selectList(paramMap);
+        //返回内容
         Response response=Response.newResponse();
         response.put("categoryList",list);
         return response;
@@ -93,8 +94,10 @@ public class CategoryController {
     */
     public Response delete(@RequestBody Category category) {
         category.setStatus((short) 1);
+        category.setUpdateTime(String.valueOf(new Date().getTime()));
         try{
-            switch (categoryService.updateById(category)){
+            // 第一次删除将分类状态变为删除状态，第二次删除则删掉记录
+            switch (categoryService.deleteCategory(category)){
                 case -1:
                     throw new SQLException();
                 case 0:

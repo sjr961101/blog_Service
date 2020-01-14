@@ -31,6 +31,7 @@
     select
     count(0)
     from article
+    where status=#{status,jdbcType=SMALLINT}
   </select>
 
   <select id="selectList" resultMap="ArticleMap">
@@ -187,7 +188,28 @@
       <if test="status != null" >
         status=#{status,jdbcType=SMALLINT},
       </if>
+      <if test="isEncrypt != null" >
+        is_encrypt=#{isEncrypt,jdbcType=BIT},
+      </if>
+      <if test="content != null" >
+        content=#{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="htmlContent != null" >
+        html_content=#{htmlContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="cover != null" >
+        cover=#{cover,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="subMessage != null" >
+        sub_message=#{subMessage,jdbcType=LONGVARCHAR},
+      </if>
     </set>
     where id=#{id,jdbcType=VARCHAR}
   </update>
+
+  <delete id="deleteArticle" parameterType="com.blog.model.Article">
+    delete from article
+    where id=#{id,jdbcType=VARCHAR}
+    and status=1
+  </delete>
 </mapper>

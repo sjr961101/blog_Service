@@ -8,7 +8,9 @@ import java.util.List;
 public interface CategoryService {
     List<Category> selectList(ParamMap paramMap);
 
-    int insert(Category record);
+    Integer insert(Category record);
 
-    int updateById(Category record);
+    Integer updateById(Category record);
+
+    Integer deleteCategory(Category category);
 }

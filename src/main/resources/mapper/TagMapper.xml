@@ -93,5 +93,10 @@
     </set>
     where  id = #{tagId,jdbcType=VARCHAR}
   </update>
-
+  <delete id="delete" parameterType="com.blog.model.Tag" >
+    delete from tag
+    where
+    id = #{tagId,jdbcType=VARCHAR}
+    and `status`=1
+  </delete>
 </mapper>

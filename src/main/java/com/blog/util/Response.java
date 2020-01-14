@@ -17,6 +17,11 @@ public class Response extends HashMap<String,Object> {
 
 	private Logger logger = LoggerFactory.getLogger(Response.class);
 
+	/**
+	 * @Description 默认返回code 0,，message OK
+	 * @param
+	 * @return
+	*/
 	private Response() {
 		this.put(CODE, 0);
         this.put(MESSAGE, "OK");

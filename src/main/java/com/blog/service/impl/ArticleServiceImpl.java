@@ -52,10 +52,10 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Integer selectByAllcount() {
+    public Integer selectByAllcount(ParamMap paramMap) {
         Integer count=0;
         try{
-            count=articleMapper.selectByAllcount();
+            count=articleMapper.selectByAllcount(paramMap);
         }catch (Exception e){
             LogUtils.error(e);
             return 0;
@@ -95,6 +95,38 @@ public class ArticleServiceImpl implements ArticleService {
         Integer count = 0;
         try {
             count = articleMapper.updateArticle(article);
+        } catch (Exception e) {
+            LogUtils.error(e);
+            return 0;
+        }
+        return count;
+    }
+
+    @Override
+    public Integer deleteArticle(Article article) {
+        Integer count=0;
+        try{
+            if(articleMapper.deleteArticle(article)==1){
+                ArticleTag at=new ArticleTag();
+                at.setArticleId(article.getId());
+                count=articleTagMapper.delete(at);
+            }else{
+                count=articleMapper.updateArticle(article);
+            }
+        }catch (Exception e){
+            TransactionAspectSupport.currentTransactionStatus()
+                    .setRollbackOnly();
+            LogUtils.error(e);
+            return -1;
+        }
+        return count;
+    }
+
+    @Override
+    public Integer deleteTag(ArticleTag articleTag) {
+        Integer count = 0;
+        try {
+            count = articleTagMapper.delete(articleTag);
         } catch (Exception e) {
             LogUtils.error(e);
             return 0;

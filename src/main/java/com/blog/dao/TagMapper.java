@@ -7,9 +7,11 @@ import java.util.List;
 
 public interface TagMapper {
 
-    int insert(Tag record);
+    Integer insert(Tag record);
 
     List<Tag> selectList(ParamMap paramMap);
 
-    int updateById(Tag record);
+    Integer updateById(Tag record);
+
+    Integer delete(Tag tag);
 }

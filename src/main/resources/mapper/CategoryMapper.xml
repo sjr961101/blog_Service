@@ -26,7 +26,9 @@
       </if>
     </set>
     where id = #{categoryId,jdbcType=VARCHAR}
+    <if test="status != null" >
     and can_del= 1
+    </if>
   </update>
 
   <select id="selectList" resultMap="Category" >
@@ -91,5 +93,12 @@
       </if>
     </trim>
   </insert>
+
+  <delete id="deleteCategory">
+    delete from category
+    where id = #{categoryId,jdbcType=VARCHAR}
+    and status=1
+    and can_del= 1
+  </delete>
 
 </mapper>

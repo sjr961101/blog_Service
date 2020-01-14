@@ -91,8 +91,9 @@ public class TagController {
     */ 
     public Response delete(@RequestBody Tag tag) {
         tag.setStatus((short) 1);
+        tag.setUpdateTime(String.valueOf(new Date().getTime()));
         try{
-            switch (tagService.update(tag)){
+            switch (tagService.delete(tag)){
                 case -1:
                     throw new SQLException();
                 case 0:

@@ -10,7 +10,7 @@ public interface ArticleMapper {
 
     int insert(Article record);
 
-    Integer selectByAllcount();
+    Integer selectByAllcount(ParamMap paramMap);
 
     List<Article> selectList(ParamMap paramMap);
 
@@ -19,4 +19,6 @@ public interface ArticleMapper {
     Integer addpageView(ParamMap paramMap);
 
     Integer updateArticle(Article article);
+
+    Integer deleteArticle(Article article);
 }

@@ -1,20 +1,14 @@
 package com.blog.dao;
 
-import com.blog.pojo.Comments;
-import com.blog.pojo.CommentsWithBLOBs;
+
+import com.blog.model.Comments;
 
 public interface CommentsMapper {
-    int deleteByPrimaryKey(Integer id);
+    Integer deleteByPrimaryKey(Integer id);
 
-    int insert(CommentsWithBLOBs record);
+    Integer insertComment(Comments record);
 
-    int insertSelective(CommentsWithBLOBs record);
+    Comments selectByPrimaryKey(Integer id);
 
-    CommentsWithBLOBs selectByPrimaryKey(Integer id);
-
-    int updateByPrimaryKeySelective(CommentsWithBLOBs record);
-
-    int updateByPrimaryKeyWithBLOBs(CommentsWithBLOBs record);
-
-    int updateByPrimaryKey(Comments record);
+    Integer selectParentId(Integer id);
 }

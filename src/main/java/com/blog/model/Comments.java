@@ -1,5 +1,7 @@
 package com.blog.model;
 
+import java.util.List;
+
 public class Comments {
     private Integer id;
 
@@ -17,18 +19,20 @@ public class Comments {
 
     private String deleteTime;
 
-    private Boolean status;
+    private Short status;
 
-    private Boolean isAuthor;
+    private Short isAuthor;
 
     private String content;
 
     private String sourceContent;
 
+    private List<Comments> children;
+
     public Comments() {
     }
 
-    public Comments(Integer id, String articleId, Integer parentId, Integer replyId, String name, String email, String createTime, String deleteTime, Boolean status, Boolean isAuthor, String content, String sourceContent) {
+    public Comments(Integer id, String articleId, Integer parentId, Integer replyId, String name, String email, String createTime, String deleteTime, Short status, Short isAuthor, String content, String sourceContent) {
         this.id = id;
         this.articleId = articleId;
         this.parentId = parentId;
@@ -107,19 +111,19 @@ public class Comments {
         this.deleteTime = deleteTime;
     }
 
-    public Boolean getStatus() {
+    public Short getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Short status) {
         this.status = status;
     }
 
-    public Boolean getAuthor() {
+    public Short getAuthor() {
         return isAuthor;
     }
 
-    public void setAuthor(Boolean author) {
+    public void setAuthor(Short author) {
         isAuthor = author;
     }
 
@@ -137,5 +141,13 @@ public class Comments {
 
     public void setSourceContent(String sourceContent) {
         this.sourceContent = sourceContent;
+    }
+
+    public List<Comments> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Comments> children) {
+        this.children = children;
     }
 }

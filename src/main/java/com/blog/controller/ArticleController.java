@@ -98,7 +98,8 @@ public class ArticleController {
     */
     public Response getList(@RequestBody ParamMap paramMap) {
         paramMap.put("page",(int)paramMap.get("page")*(int)paramMap.get("pageSize"));
-        paramMap.put("status",0);
+        Integer state=paramMap.get("state")!=null?Integer.parseInt(paramMap.get("state").toString()):0;
+        paramMap.put("state",state);
         List<Article> list=null;
         //文章总数
         Integer count =0;

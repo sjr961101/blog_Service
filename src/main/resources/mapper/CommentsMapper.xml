@@ -1,68 +1,64 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.blog.dao.CommentsMapper" >
-  <resultMap id="BaseResultMap" type="com.blog.pojo.Comments" >
-    <constructor >
-      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="article_id" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="parent_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="reply_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="email" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="create_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="delete_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="status" jdbcType="BIT" javaType="java.lang.Boolean" />
-      <arg column="is_author" jdbcType="BIT" javaType="java.lang.Boolean" />
-    </constructor>
+  <resultMap id="BaseResultMap" type="com.blog.model.Comments" >
+      <id column="id" property="id" />
+      <result column="article_id" property="articleId" />
+      <result column="parent_id" property="parentId"  />
+      <result column="reply_id" property="replyId"  />
+      <result column="name" property="name"  />
+      <result column="email" property="email"  />
+      <result column="create_time" property="createTime"  />
+      <result column="delete_time" property="deleteTime"  />
+      <result column="status" property="status" />
+      <result column="is_author" property="isAuthor"  />
+      <collection property="children" ofType="com.blog.model.Comments">
+
+      </collection>
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.blog.pojo.CommentsWithBLOBs" >
-    <constructor >
-      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="article_id" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="parent_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="reply_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="email" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="create_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="delete_time" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="status" jdbcType="BIT" javaType="java.lang.Boolean" />
-      <arg column="is_author" jdbcType="BIT" javaType="java.lang.Boolean" />
-      <arg column="content" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
-      <arg column="source_content" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
-    </constructor>
-  </resultMap>
+
   <sql id="Base_Column_List" >
     id, article_id, parent_id, reply_id, name, email, create_time, delete_time, status, 
     is_author
   </sql>
+
   <sql id="Blob_Column_List" >
     content, source_content
   </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from comments
-    where id = #{id,jdbcType=INTEGER}
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT
+	*
+    FROM
+	( SELECT article_id, create_time, id, is_author, NAME, parent_id, reply_id FROM comments WHERE id = #{id,jdbcType=INTEGER} ) article1
+	LEFT JOIN (
+	SELECT
+		article_id AS childArticleId,
+		create_time AS childCreateTime,
+		id AS childId,
+		is_author AS childIsAuthor,
+		NAME AS childName,
+		parent_id AS childParentId,
+		reply_id AS childReplyId
+	FROM
+		comments
+	WHERE
+		STATUS = 0
+	AND parent_id = #{id,jdbcType=INTEGER}
+	) children ON article1.id = children.childParentId
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from comments
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.blog.pojo.CommentsWithBLOBs" >
-    insert into comments (id, article_id, parent_id, 
-      reply_id, name, email, 
-      create_time, delete_time, status, 
-      is_author, content, source_content
-      )
-    values (#{id,jdbcType=INTEGER}, #{articleId,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, 
-      #{replyId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=INTEGER}, #{deleteTime,jdbcType=INTEGER}, #{status,jdbcType=BIT}, 
-      #{isAuthor,jdbcType=BIT}, #{content,jdbcType=LONGVARCHAR}, #{sourceContent,jdbcType=LONGVARCHAR}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.blog.pojo.CommentsWithBLOBs" >
+
+  <select id="selectParentId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select parent_id from comments
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insertComment" parameterType="com.blog.model.Comments" >
     insert into comments
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -141,71 +137,5 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.blog.pojo.CommentsWithBLOBs" >
-    update comments
-    <set >
-      <if test="articleId != null" >
-        article_id = #{articleId,jdbcType=VARCHAR},
-      </if>
-      <if test="parentId != null" >
-        parent_id = #{parentId,jdbcType=INTEGER},
-      </if>
-      <if test="replyId != null" >
-        reply_id = #{replyId,jdbcType=INTEGER},
-      </if>
-      <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="email != null" >
-        email = #{email,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=INTEGER},
-      </if>
-      <if test="deleteTime != null" >
-        delete_time = #{deleteTime,jdbcType=INTEGER},
-      </if>
-      <if test="status != null" >
-        status = #{status,jdbcType=BIT},
-      </if>
-      <if test="isAuthor != null" >
-        is_author = #{isAuthor,jdbcType=BIT},
-      </if>
-      <if test="content != null" >
-        content = #{content,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="sourceContent != null" >
-        source_content = #{sourceContent,jdbcType=LONGVARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.blog.pojo.CommentsWithBLOBs" >
-    update comments
-    set article_id = #{articleId,jdbcType=VARCHAR},
-      parent_id = #{parentId,jdbcType=INTEGER},
-      reply_id = #{replyId,jdbcType=INTEGER},
-      name = #{name,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER},
-      delete_time = #{deleteTime,jdbcType=INTEGER},
-      status = #{status,jdbcType=BIT},
-      is_author = #{isAuthor,jdbcType=BIT},
-      content = #{content,jdbcType=LONGVARCHAR},
-      source_content = #{sourceContent,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.blog.pojo.Comments" >
-    update comments
-    set article_id = #{articleId,jdbcType=VARCHAR},
-      parent_id = #{parentId,jdbcType=INTEGER},
-      reply_id = #{replyId,jdbcType=INTEGER},
-      name = #{name,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER},
-      delete_time = #{deleteTime,jdbcType=INTEGER},
-      status = #{status,jdbcType=BIT},
-      is_author = #{isAuthor,jdbcType=BIT}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+
 </mapper>

@@ -31,14 +31,14 @@
     select
     count(0)
     from article
-    where status=#{status,jdbcType=SMALLINT}
+    where status=#{state,jdbcType=SMALLINT}
   </select>
 
   <select id="selectList" resultMap="ArticleMap">
     select
     a.cover,a.title, FROM_UNIXTIME(a.publish_time/1000,'%Y-%m-%d %H:%i:%s') as publish_time, a.pageview, a.sub_message,
     a.id,c.id as tagId,c.name as tagName,a.cgId,a.cgName
-    from (select a.cover,a.id,a.title, a.publish_time, a.pageview, a.sub_message,b.name as cgName,b.id as cgId from article a left join category b on a.category_id=b.id and b.`status`=0 where a.`status`=0) a
+    from (select a.cover,a.id,a.title, a.publish_time, a.pageview, a.sub_message,b.name as cgName,b.id as cgId from article a left join category b on a.category_id=b.id and b.`status`=0 where a.`status`=#{state,jdbcType=SMALLINT}) a
     left join article_tag_mapper b
     on a.id=b.article_id
     left join tag c

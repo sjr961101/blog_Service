@@ -121,10 +121,13 @@ public class ArticleController {
     public Response getDetail(@RequestBody ParamMap paramMap) {
         Article article=null;
         article=articleService.selectDetailById(paramMap);
-        Date d=new Date(Long.parseLong(article.getPublishTime()));
-        article.setPublishTime(TimeUtil.timeToStr(d));
         Response response=Response.newResponse();
-        response.put("list",article);
+        if(article!=null){
+            response.put("list",article);
+        }else{
+            response.put("code",666).put("message","未查到该文章");
+        }
+
         return response;
     };
 

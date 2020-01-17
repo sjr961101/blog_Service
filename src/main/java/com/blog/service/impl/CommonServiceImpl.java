@@ -1,6 +1,8 @@
 package com.blog.service.impl;
 
+import com.blog.dao.BlogConfigMapper;
 import com.blog.dao.CommonMapper;
+import com.blog.model.BlogConfig;
 import com.blog.model.Common;
 import com.blog.service.CommonService;
 import com.blog.util.LogUtils;
@@ -12,6 +14,9 @@ public class CommonServiceImpl implements CommonService {
     @Autowired(required = false)
     CommonMapper commonMapper;
 
+    @Autowired(required = false)
+    BlogConfigMapper blogConfigMapper;
+
     @Override
     public Common statistic() {
         Common common=null;
@@ -22,5 +27,17 @@ public class CommonServiceImpl implements CommonService {
             return null;
         }
         return common;
+    }
+
+    @Override
+    public BlogConfig blogInfo() {
+        BlogConfig blogConfig=null;
+        try{
+            blogConfig=blogConfigMapper.selectConfig();
+        }catch (Exception e){
+            LogUtils.error(e);
+            return null;
+        }
+        return blogConfig;
     }
 }

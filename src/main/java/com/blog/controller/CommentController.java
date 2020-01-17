@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 @CrossOrigin
 @Controller
@@ -31,8 +32,15 @@ public class CommentController {
         return Response.newResponse();
     }
 
-    public Response selectComment(@RequestBody Integer articleId){
-            return Response.newResponse();
+    @RequestMapping(value="w/comments/list",method = RequestMethod.POST)
+    public Response selectComment(@RequestBody Response response){
+            String articleId = response.get("articleId").toString();
+            Integer count=commentService.selectCount(articleId);
+            List<Comments> comments=commentService.selectByArtId(articleId);
+            if(comments==null){
+                return Response.newResponse().put("code",666).put("message","查询失败");
+            }
+            return Response.newResponse().put("list",comments).put("count",count);
     }
 
 }

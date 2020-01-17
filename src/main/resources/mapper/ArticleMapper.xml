@@ -36,14 +36,14 @@
 
   <select id="selectList" resultMap="ArticleMap">
     select
-    a.cover,a.title, FROM_UNIXTIME(a.publish_time/1000,'%Y-%m-%d %H:%i:%s') as publish_time, a.pageview, a.sub_message,
+    a.cover,a.title, FROM_UNIXTIME(a.publish_time/1000,'%Y-%m-%d %H:%i:%s') as publish_time,FROM_UNIXTIME(a.create_time/1000,'%Y-%m-%d %H:%i:%s') as create_time,FROM_UNIXTIME(a.update_time/1000,'%Y-%m-%d %H:%i:%s') as update_time, a.pageview, a.sub_message,
     a.id,c.id as tagId,c.name as tagName,a.cgId,a.cgName
-    from (select a.cover,a.id,a.title, a.publish_time, a.pageview, a.sub_message,b.name as cgName,b.id as cgId from article a left join category b on a.category_id=b.id and b.`status`=0 where a.`status`=#{state,jdbcType=SMALLINT}) a
+    from (select a.cover,a.id,a.title, a.publish_time,a.create_time,a.update_time, a.pageview, a.sub_message,b.name as cgName,b.id as cgId from article a left join category b on a.category_id=b.id and b.`status`=0 where a.`status`=#{state,jdbcType=SMALLINT}) a
     left join article_tag_mapper b
     on a.id=b.article_id
     left join tag c
     on b.tag_id=c.id and c.status=0
-    order by publish_time desc
+    order by update_time desc
     limit #{page,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
   </select>
 
@@ -146,19 +146,46 @@
   </insert>
 
   <select id="selectDetailById" resultMap="ArticleMap">
-    select
-    a.cover,a.html_content,a.title, a.publish_time, a.pageview, a.sub_message,
-    a.id,c.id as tagId,c.name as tagName,a.cgId,a.cgName
-    from (
-        select a.cover,a.html_content,a.id,a.title, a.publish_time, a.pageview,
-            a.sub_message,b.name as cgName,b.id as cgId
-        from (select * from article where id=#{id,jdbcType=VARCHAR} and `status`=0) a left join category b
-        on a.category_id=b.id and b.`status`=0
-        where a.`status`=0) a
-    left join article_tag_mapper b
-    on a.id=b.article_id
-    left join tag c
-    on b.tag_id=c.id and c.status=0
+    SELECT
+	a.cover,
+	a.html_content,
+	a.title,
+	a.content,
+	FROM_UNIXTIME(a.create_time/1000,'%Y-%m-%d %H:%i:%s') AS create_time,
+	FROM_UNIXTIME(a.update_time/1000,'%Y-%m-%d %H:%i:%s') AS update_time,
+	FROM_UNIXTIME(a.publish_time/1000,'%Y-%m-%d %H:%i:%s') AS publish_time,
+	a.pageview,
+	a.sub_message,
+	a.id,
+	c.id AS tagId,
+	c.NAME AS tagName,
+	a.cgId,
+	a.cgName
+    FROM
+	(
+	SELECT
+		a.cover,
+		a.html_content,
+		a.id,
+		a.title,
+		a.content,
+		a.create_time,
+		a.update_time,
+		a.publish_time,
+		a.pageview,
+		a.sub_message,
+		b.NAME AS cgName,
+		b.id AS cgId
+	FROM
+		( SELECT * FROM article WHERE id=#{id,jdbcType=VARCHAR} AND `status` != 1 ) a
+		LEFT JOIN category b ON a.category_id = b.id
+		AND b.`status` = 0
+	WHERE
+		a.`status` != 1
+	) a
+	LEFT JOIN article_tag_mapper b ON a.id = b.article_id
+	LEFT JOIN tag c ON b.tag_id = c.id
+	AND c.STATUS = 0
   </select>
 
   <update id="addpageView" parameterType="com.blog.util.ParamMap">

@@ -12,8 +12,20 @@
       <result column="delete_time" property="deleteTime"  />
       <result column="status" property="status" />
       <result column="is_author" property="isAuthor"  />
+      <result column="source_content" property="sourceContent" />
+      <result column="content" property="content" />
       <collection property="children" ofType="com.blog.model.Comments">
-
+        <id column="childId" property="id" />
+        <result column="childArticleId" property="articleId" />
+        <result column="childParentId" property="parentId"  />
+        <result column="childReplyId" property="replyId"  />
+        <result column="childName" property="name"  />
+        <result column="childEmail" property="email"  />
+        <result column="childCreateTime" property="createTime"  />
+        <result column="childDeleteTime" property="deleteTime"  />
+        <result column="childIsAuthor" property="isAuthor"  />
+        <result column="childSourceContent" property="sourceContent" />
+        <result column="childContent" property="content" />
       </collection>
   </resultMap>
 
@@ -26,25 +38,27 @@
     content, source_content
   </sql>
 
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByArtId" resultMap="BaseResultMap">
     SELECT
 	*
     FROM
-	( SELECT article_id, create_time, id, is_author, NAME, parent_id, reply_id FROM comments WHERE id = #{id,jdbcType=INTEGER} ) article1
+	( SELECT article_id, FROM_UNIXTIME(comments.create_time/1000,'%Y-%m-%d %H:%i:%s') as create_time, id, is_author, NAME, parent_id, reply_id,source_content,content FROM comments WHERE status=0 and parent_id=0 and article_id = #{articleId,jdbcType=VARCHAR} ) article1
 	LEFT JOIN (
 	SELECT
 		article_id AS childArticleId,
-		create_time AS childCreateTime,
+		FROM_UNIXTIME(comments.create_time/1000,'%Y-%m-%d %H:%i:%s') AS childCreateTime,
 		id AS childId,
 		is_author AS childIsAuthor,
 		NAME AS childName,
 		parent_id AS childParentId,
-		reply_id AS childReplyId
+		reply_id AS childReplyId,
+		source_content as childSourceContent,
+		content as childContent
 	FROM
 		comments
 	WHERE
 		STATUS = 0
-	AND parent_id = #{id,jdbcType=INTEGER}
+	AND article_id = #{articleId,jdbcType=VARCHAR}
 	) children ON article1.id = children.childParentId
   </select>
 
@@ -137,5 +151,11 @@
       </if>
     </trim>
   </insert>
+
+  <select id="selectCount"  resultType="java.lang.Integer">
+    select count(0)
+    from comments
+    where status=0 and parent_id=0 and article_id = #{articleId,jdbcType=VARCHAR}
+  </select>
 
 </mapper>

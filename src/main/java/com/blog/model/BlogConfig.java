@@ -19,6 +19,12 @@ public class BlogConfig {
 
     private String github;
 
+    private Integer ArticleCount;
+
+    private Integer categoryCount;
+
+    private Integer tagCount;
+
     public BlogConfig(Integer id, String blogName, String viewPassword, String salt, String avatar, String sign, String wxpayQrcode, String alipayQrcode, String github) {
         this.id = id;
         this.blogName = blogName;
@@ -104,5 +110,29 @@ public class BlogConfig {
 
     public void setGithub(String github) {
         this.github = github;
+    }
+
+    public Integer getArticleCount() {
+        return ArticleCount;
+    }
+
+    public void setArticleCount(Integer articleCount) {
+        ArticleCount = articleCount;
+    }
+
+    public Integer getCategoryCount() {
+        return categoryCount;
+    }
+
+    public void setCategoryCount(Integer categoryCount) {
+        this.categoryCount = categoryCount;
+    }
+
+    public Integer getTagCount() {
+        return tagCount;
+    }
+
+    public void setTagCount(Integer tagCount) {
+        this.tagCount = tagCount;
     }
 }

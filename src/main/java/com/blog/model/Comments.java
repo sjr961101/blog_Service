@@ -29,6 +29,10 @@ public class Comments {
 
     private List<Comments> children;
 
+    private String ip;
+
+    private String articleTitle;
+
     public Comments() {
     }
 
@@ -119,14 +123,6 @@ public class Comments {
         this.status = status;
     }
 
-    public Short getAuthor() {
-        return isAuthor;
-    }
-
-    public void setAuthor(Short author) {
-        isAuthor = author;
-    }
-
     public String getContent() {
         return content;
     }
@@ -149,5 +145,29 @@ public class Comments {
 
     public void setChildren(List<Comments> children) {
         this.children = children;
+    }
+
+    public Short getIsAuthor() {
+        return isAuthor;
+    }
+
+    public void setIsAuthor(Short isAuthor) {
+        this.isAuthor = isAuthor;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getArticleTitle() {
+        return articleTitle;
+    }
+
+    public void setArticleTitle(String articleTitle) {
+        this.articleTitle = articleTitle;
     }
 }

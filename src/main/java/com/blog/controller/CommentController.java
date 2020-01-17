@@ -2,6 +2,7 @@ package com.blog.controller;
 
 import com.blog.model.Comments;
 import com.blog.service.CommentService;
+import com.blog.util.ParamMap;
 import com.blog.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,20 +28,30 @@ public class CommentController {
         }
         comments.setCreateTime(String.valueOf(new Date().getTime()));
         if(commentService.insert(comments)!=1){
-            return Response.newResponse().put("code","666").put("message","评论失败");
+            return Response.failResponse("新增评论失败,请核对数据");
         }
-        return Response.newResponse();
+        return Response.okResponse();
     }
 
     @RequestMapping(value="w/comments/list",method = RequestMethod.POST)
-    public Response selectComment(@RequestBody Response response){
-            String articleId = response.get("articleId").toString();
+    public Response selectComment(@RequestBody ParamMap paramMap){
+            String articleId = paramMap.get("articleId").toString();
             Integer count=commentService.selectCount(articleId);
             List<Comments> comments=commentService.selectByArtId(articleId);
             if(comments==null){
-                return Response.newResponse().put("code",666).put("message","查询失败");
+                return Response.failResponse("查询失败");
             }
-            return Response.newResponse().put("list",comments).put("count",count);
+            return Response.setResponse("list",comments).setCount(count);
+    }
+
+    @RequestMapping(value = "a/comments/alllist",method = RequestMethod.POST)
+    public Response selectAll(@RequestBody ParamMap paramMap){
+        Integer count=commentService.selectCount(null);
+        List<Comments> comments=commentService.selectByArtId(null);
+        if(comments==null){
+            return Response.failResponse("查询失败");
+        }
+        return Response.setResponse("list",comments).setCount(count);
     }
 
 }

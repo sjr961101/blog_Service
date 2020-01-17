@@ -34,9 +34,10 @@ public class TagController {
     public Response getList(@RequestBody ParamMap paramMap) {
         List<Tag> list=null;
         list=tagService.selectList(paramMap);
-        Response response=Response.newResponse();
-        response.put("tagList",list);
-        return response;
+        if(list != null){
+            return Response.setResponse("tagList",list);
+        }
+        return Response.failResponse("查询失败");
     };
 
     @RequestMapping(value = "a/tag/add", method = RequestMethod.POST)
@@ -55,9 +56,9 @@ public class TagController {
                 throw new NullPointerException();
             }
         }catch (NullPointerException e){
-            return Response.newResponse().put("code",666).put("message","标签添加失败");
+            return Response.failResponse("标签添加失败");
         }
-        return Response.newResponse();
+        return Response.okResponse();
     };
 
     @RequestMapping(value = "a/tag/modify", method = RequestMethod.POST)
@@ -76,11 +77,11 @@ public class TagController {
             }
         }catch (SQLException e){
             LogUtils.debug(this.getClass().getName()+"update");
-            return Response.newResponse().put("code",666).put("message","标签修改失败,数据错误");
+            return Response.failResponse("标签修改失败,数据错误");
         }catch (NullPointerException e){
-            return Response.newResponse().put("code",666).put("message","标签修改失败，未找到该分类");
+            return Response.failResponse("标签修改失败，未找到该分类");
         }
-        return Response.newResponse();
+        return Response.okResponse();
     };
 
     @RequestMapping(value = "a/tag/delete", method = RequestMethod.POST)
@@ -102,10 +103,10 @@ public class TagController {
 
         }catch (SQLException e){
             LogUtils.debug(this.getClass().getName()+"update");
-            return Response.newResponse().put("code",666).put("message","标签删除失败,数据错误");
+            return Response.failResponse("标签删除失败,数据错误");
         }catch (NullPointerException e){
-            return Response.newResponse().put("code",666).put("message","标签删除失败，未找到该分类");
+            return Response.failResponse("标签删除失败，未找到该分类");
         }
-        return Response.newResponse();
+        return Response.okResponse();
     };
 }

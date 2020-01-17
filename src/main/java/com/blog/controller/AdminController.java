@@ -42,13 +42,13 @@ public class AdminController {
             admin = adminService.selectByName(admin);
             if(admin!=null){
                 if(!admin.getPassword().equals(pwd)){
-                    return Response.newResponse().put("code", -4001).put("message", "用户名或密码错误");
+                    return Response.failResponse().setCodeAndMessage(-4001,"用户名或密码错误");
                 }
             }else{
-                return Response.newResponse().put("code", -4001).put("message", "未查到该用户");
+                return Response.failResponse().setCodeAndMessage(-4001,"未查到该用户");
             }
         }catch (Exception e){
-            return Response.newResponse().put("code", -4001).put("message", "未知错误");
+            return Response.failResponse().setCodeAndMessage(-4001,"系统错误，锤管理员查看日志");
         }
         //返回信息
         Map data =new HashMap();
@@ -59,6 +59,6 @@ public class AdminController {
         data.put("access_token",token);  //生产的token
         data.put("isAuthor",1);  //是否是作者
         redisUtil.set(token, TimeUtil.timeToStr("HHmmss",new Date()));
-        return Response.newResponse().setData(data);
+        return Response.setResponse(data);
     }
 }

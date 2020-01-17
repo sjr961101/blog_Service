@@ -82,12 +82,12 @@ public class ArticleController {
         article.setCreateTime(now);
         article.setUpdateTime(now);
         article.setPublishTime(now);
-        Response response=Response.newResponse();
+
         //新增
         if(articleService.insert(article)!=1){
-            response.put("code","666").put("message","新增失败");
+            return Response.failResponse("新增失败");
         }
-        return response;
+        return Response.okResponse();
     };
 
     @RequestMapping(value = "w/article/list", method = RequestMethod.POST)
@@ -106,10 +106,11 @@ public class ArticleController {
         //文章列表(分页)
         list=articleService.selectList(paramMap);
         count=articleService.selectByAllcount(paramMap);
-        Response response=Response.newResponse();
-        response.put("list",list);
-        response.put("count",count);
-        return response;
+        if(list!=null){
+            return Response.setResponse("list",list).setCount(count);
+        }
+
+        return Response.failResponse("文章查询失败");
     };
 
     @RequestMapping(value = "w/article", method = RequestMethod.POST)
@@ -121,14 +122,12 @@ public class ArticleController {
     public Response getDetail(@RequestBody ParamMap paramMap) {
         Article article=null;
         article=articleService.selectDetailById(paramMap);
-        Response response=Response.newResponse();
+
         if(article!=null){
-            response.put("list",article);
-        }else{
-            response.put("code",666).put("message","未查到该文章");
+            return Response.setResponse("list",article);
         }
 
-        return response;
+        return Response.failResponse();
     };
 
     @RequestMapping(value = "a/article/save", method = RequestMethod.POST)
@@ -145,12 +144,12 @@ public class ArticleController {
         article.setCreateTime(now);
         article.setUpdateTime(now);
         article.setStatus((short) 2);
-        Response response=Response.newResponse();
+
         //保存
         if(articleService.insert(article)!=1){
-            response.put("code","666").put("message","保存失败");
+            return Response.failResponse();
         }
-        return response;
+        return Response.okResponse();
     };
 
 
@@ -167,12 +166,12 @@ public class ArticleController {
         if(article.getStatus()==0) {
             article.setPublishTime(now);
         }
-        Response response=Response.newResponse();
+
         //修改
         if(articleService.updateArticle(article)!=1){
-            response.put("code","666").put("message","修改失败");
+            return Response.failResponse();
         }
-        return response;
+        return Response.okResponse();
     };
 
     @RequestMapping(value = "a/article/delete", method = RequestMethod.POST)
@@ -186,12 +185,12 @@ public class ArticleController {
         //修改时间
         article.setDeleteTime(now);
         article.setStatus((short) 1);
-        Response response=Response.newResponse();
+
         //删除   第一次删除将文章状态变为删除状态，第二次删除则删掉记录
         if(articleService.deleteArticle(article)!=1){
-            response.put("code","666").put("message","删除失败");
+            return Response.failResponse();
         }
-        return response;
+        return Response.okResponse();
     };
 
 

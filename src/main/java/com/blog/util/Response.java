@@ -7,11 +7,16 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 
 @SuppressWarnings("serial")
+/**
+ * @Description: 封装的返回方法
+ * @Author:
+ * @Date:
+*/
 public class Response extends HashMap<String,Object> {
 
 	private final static String CODE = "code";
 	private final static String DATA = "data";
-	private final static String TOTAL = "total";
+	private final static String COUNT = "count";
 	private final static String MESSAGE = "message";
 
 
@@ -27,30 +32,41 @@ public class Response extends HashMap<String,Object> {
         this.put(MESSAGE, "OK");
 	}
 
+	private Response(int flag,String message) {
+		this.put(CODE, flag);
+		this.put(MESSAGE, message);
+	}
 
 
-    //静态方法------------------------------------------------------------------------------
-	public static Response newResponse() {
+
+    //构建方法------------------------------------------------------------------------------
+	public static Response okResponse() {
 		return new Response();
 	}
 
-    public static Response set(Integer total, Object rows) {
-        Response response = new Response();
-        response.setTotal(total);
-        response.ok(rows);
+	public static Response failResponse(){
+		return new Response(666,"ERROR");
+	}
 
+	public static Response failResponse(String message){
+		return new Response(666,message);
+	}
+
+    public static Response setResponse(Integer count, Object rows) {
+        Response response = new Response();
+        response.setCount(count);
+        response.setData(rows);
         return response;
     }
 
-    public static Response set(Object rows) {
+    public static Response setResponse(Object rows) {
         Response response = new Response();
-        response.ok(rows);
-
+        response.setData(rows);
         return response;
     }
 
-    public static Response set(String key, Object value) {
-        Response response = Response.newResponse();
+    public static Response setResponse(String key, Object value) {
+        Response response = Response.okResponse();
         response.put(key, value);
         return response;
     }
@@ -80,35 +96,21 @@ public class Response extends HashMap<String,Object> {
 		Object msg = this.get(MESSAGE);
 		return msg != null ? msg.toString() : null;
 	}
-	
+
+	/**
+	 * @Description:  修改键名
+	*/
 	public Response moveTo(String fromKey, String toKey) {
 		Object val = this.get(fromKey);
 		this.put(toKey, val);
 		this.remove(fromKey);
 		return this;
 	}
-	
-	public Boolean isOK() {
-		return this.getCode() == 200;
-	}
-	
-	public Boolean isFail() {
-		return !isOK();
-	}
-	
-	public Response ok(Object data) {
-		super.put(DATA, data);
-		return this;
-	}
-	
-	public Response ok(String key, Object val) {
-		super.put(key, val);
-		return this;
-	}
-	
+
+
 	public Response setResults(Integer count, Object data) {
-		this.setTotal(count);
-		this.ok(data);
+		this.setCount(count);
+		this.setData(data);
 		return this;
 	}
 	
@@ -132,15 +134,6 @@ public class Response extends HashMap<String,Object> {
 		return this;
 	}
 
-
-    /**
-     * 设置返回信息
-     * 此方法只能用于标明一些已有错误code,但需要特别定制的返回消息时用到
-     * 请不要滥用此方法
-     *
-     * @param message
-     * @return
-     */
     public Response setMessage(String message) {
         this.put(MESSAGE, message);
         return this;
@@ -151,22 +144,9 @@ public class Response extends HashMap<String,Object> {
 	}
 	
 
-	public Response setTotal(Integer total) {
-		this.put(TOTAL, total);
+	public Response setCount(Integer count) {
+		this.put(COUNT, count);
 		return this;
 	}
-
-
-	
-
-//============状态===================================================================================	
-	
-    public Response OK() {
-		this.setCode(200);
-		this.put(MESSAGE, "ok");
-		return this;
-	}
-
-
 
 }

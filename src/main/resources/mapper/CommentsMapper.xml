@@ -14,6 +14,8 @@
       <result column="is_author" property="isAuthor"  />
       <result column="source_content" property="sourceContent" />
       <result column="content" property="content" />
+      <result column="ip" property="ip" />
+      <result column="articleTitle" property="articleTitle" />
       <collection property="children" ofType="com.blog.model.Comments">
         <id column="childId" property="id" />
         <result column="childArticleId" property="articleId" />
@@ -42,7 +44,28 @@
     SELECT
 	*
     FROM
-	( SELECT article_id, FROM_UNIXTIME(comments.create_time/1000,'%Y-%m-%d %H:%i:%s') as create_time, id, is_author, NAME, parent_id, reply_id,source_content,content FROM comments WHERE status=0 and parent_id=0 and article_id = #{articleId,jdbcType=VARCHAR} ) article1
+	( SELECT
+	article_id,
+	FROM_UNIXTIME(comments.create_time/1000,'%Y-%m-%d %H:%i:%s') as create_time,
+	id,
+	is_author,
+	NAME,
+	parent_id,
+	reply_id,
+	source_content,
+    <if test="articleId == null">
+        ip,
+        (select title from article where article_id=article.id) as articleTitle,
+    </if>
+	content
+	FROM comments
+	WHERE status=0
+	and parent_id=0
+	<if test="articleId != null">
+	and article_id = #{articleId,jdbcType=VARCHAR}
+    </if>
+	) master
+	<if test="articleId !=null">
 	LEFT JOIN (
 	SELECT
 		article_id AS childArticleId,
@@ -59,7 +82,11 @@
 	WHERE
 		STATUS = 0
 	AND article_id = #{articleId,jdbcType=VARCHAR}
-	) children ON article1.id = children.childParentId
+	) children ON master.id = children.childParentId
+    </if>
+	<if test="page != null and pageSize !=null">
+	limit #{page,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </if>
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
@@ -111,6 +138,9 @@
       <if test="sourceContent != null" >
         source_content,
       </if>
+      <if test="ip != null">
+          ip
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -149,13 +179,19 @@
       <if test="sourceContent != null" >
         #{sourceContent,jdbcType=LONGVARCHAR},
       </if>
+      <if test="ip != null">
+        ip=#{ip,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
 
   <select id="selectCount"  resultType="java.lang.Integer">
     select count(0)
     from comments
-    where status=0 and parent_id=0 and article_id = #{articleId,jdbcType=VARCHAR}
+    where status=0 and parent_id=0
+    <if test="articleId != null">
+    and article_id = #{articleId,jdbcType=VARCHAR}
+    </if>
   </select>
 
 </mapper>

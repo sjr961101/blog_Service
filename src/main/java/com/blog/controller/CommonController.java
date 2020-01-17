@@ -24,9 +24,9 @@ public class CommonController {
         Common common=null;
         common = commonService.statistic();
         if(common==null){
-            return Response.newResponse().put("code",6).put("message","查询失败");
+            return Response.failResponse("查询失败");
         }
-        return Response.newResponse().setData(common);
+        return Response.setResponse(common);
     }
 
     @RequestMapping(value = "/w/blogInfo" , method = RequestMethod.POST)
@@ -34,11 +34,11 @@ public class CommonController {
         BlogConfig blogConfig= commonService.blogInfo();
         Common common= commonService.statistic();
         if(blogConfig==null || common==null){
-            return  Response.newResponse().put("code",666).put("message","查询失败");
+            return  Response.failResponse("查询失败");
         }
         blogConfig.setArticleCount(common.getPublishCount());
         blogConfig.setCategoryCount(common.getCategoryCount());
         blogConfig.setTagCount(common.getTagCount());
-        return  Response.newResponse().setData(blogConfig);
+        return  Response.setResponse(blogConfig);
     }
 }

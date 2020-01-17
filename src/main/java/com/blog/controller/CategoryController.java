@@ -35,10 +35,11 @@ public class CategoryController {
     public Response getList(@RequestBody ParamMap paramMap) {
         List<Category> list=null;
         list=categoryService.selectList(paramMap);
+        if(list!=null){
+            return Response.setResponse("categoryList",list);
+        }
         //返回内容
-        Response response=Response.newResponse();
-        response.put("categoryList",list);
-        return response;
+        return Response.failResponse("查询分类失败");
     };
 
     @RequestMapping(value = "a/category/add", method = RequestMethod.POST)
@@ -57,9 +58,9 @@ public class CategoryController {
                 throw new NullPointerException();
             }
         }catch (NullPointerException e){
-            return Response.newResponse().put("code",666).put("message","发布失败");
+            return Response.failResponse("添加分类失败");
         }
-        return Response.newResponse();
+        return Response.okResponse();
     };
 
     @RequestMapping(value = "a/category/modify", method = RequestMethod.POST)
@@ -79,11 +80,11 @@ public class CategoryController {
 
         }catch (SQLException e){
             LogUtils.debug(this.getClass().getName()+"update");
-            return Response.newResponse().put("code",666).put("message","分类修改失败,数据错误");
+            return Response.failResponse("分类修改失败,数据错误");
         }catch (NullPointerException e){
-            return Response.newResponse().put("code",666).put("message","分类修改失败，未找到该分类");
+            return Response.failResponse("分类修改失败，未找到该分类");
         }
-        return Response.newResponse();
+        return Response.okResponse();
     };
 
     @RequestMapping(value = "a/category/delete", method = RequestMethod.POST)
@@ -105,10 +106,10 @@ public class CategoryController {
             }
         }catch (SQLException e){
             LogUtils.debug(this.getClass().getName()+"update");
-            return Response.newResponse().put("code",666).put("message","分类删除失败,数据错误");
+            return Response.failResponse("分类删除失败,数据错误");
         }catch (NullPointerException e){
-            return Response.newResponse().put("code",666).put("message","分类删除失败，未找到该分类");
+            return Response.failResponse("分类删除失败，未找到该分类");
         }
-        return Response.newResponse();
+        return Response.okResponse();
     };
 }

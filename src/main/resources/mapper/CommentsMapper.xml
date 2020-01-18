@@ -180,7 +180,7 @@
         #{sourceContent,jdbcType=LONGVARCHAR},
       </if>
       <if test="ip != null">
-        ip=#{ip,jdbcType=VARCHAR},
+        #{ip,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -189,8 +189,8 @@
     select count(0)
     from comments
     where status=0 and parent_id=0
-    <if test="articleId != null">
-    and article_id = #{articleId,jdbcType=VARCHAR}
+    <if test="id != null">
+    and article_id = #{id,jdbcType=VARCHAR}
     </if>
   </select>
 

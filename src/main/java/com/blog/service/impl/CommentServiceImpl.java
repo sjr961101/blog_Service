@@ -4,6 +4,7 @@ import com.blog.dao.CommentsMapper;
 import com.blog.model.Comments;
 import com.blog.service.CommentService;
 import com.blog.util.LogUtils;
+import com.blog.util.ParamMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,10 +42,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comments> selectByArtId(String id) {
+    public List<Comments> selectByArtId(ParamMap paramMap) {
         List<Comments> comments=null;
         try{
-            comments=commentsMapper.selectByArtId(id);
+            comments=commentsMapper.selectByArtId(paramMap);
         }catch (Exception e){
             LogUtils.error(e);
             return null;

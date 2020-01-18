@@ -98,8 +98,8 @@ public class ArticleController {
     */
     public Response getList(@RequestBody ParamMap paramMap) {
         paramMap.put("page",(int)paramMap.get("page")*(int)paramMap.get("pageSize"));
-        Integer state=paramMap.get("state")!=null?Integer.parseInt(paramMap.get("state").toString()):0;
-        paramMap.put("state",state);
+        Integer status=paramMap.get("state")!=null?Integer.parseInt(paramMap.get("state").toString()):0;
+        paramMap.put("status",status);
         List<Article> list=null;
         //文章总数
         Integer count =0;
@@ -163,9 +163,6 @@ public class ArticleController {
         String now=Long.toString(new Date().getTime());
         //修改时间
         article.setUpdateTime(now);
-        if(article.getStatus()==0) {
-            article.setPublishTime(now);
-        }
 
         //修改
         if(articleService.updateArticle(article)!=1){
@@ -192,6 +189,23 @@ public class ArticleController {
         }
         return Response.okResponse();
     };
+
+    @RequestMapping(value = "w/article/search",method = RequestMethod.POST)
+    public Response search(@RequestBody ParamMap paramMap){
+        paramMap.put("page",(int)paramMap.get("page")*(int)paramMap.get("pageSize"));
+        Integer status=paramMap.get("state")!=null?Integer.parseInt(paramMap.get("state").toString()):0;
+        paramMap.put("status",status);
+        List<Article> list=null;
+        //文章总数
+        Integer count =0;
+        //文章列表(分页)
+        list=articleService.selectList(paramMap);
+        count=articleService.selectByAllcount(paramMap);
+        if(list!=null){
+            return Response.setResponse("list",list).setCount(count);
+        }
+        return Response.failResponse();
+    }
 
 
 }

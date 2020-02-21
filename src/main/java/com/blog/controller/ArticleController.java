@@ -4,11 +4,12 @@ package com.blog.controller;
 
 import com.blog.model.Article;
 import com.blog.model.QiNiu;
+import com.blog.model.Tag;
 import com.blog.service.ArticleService;
+import com.blog.service.CategoryService;
 import com.blog.util.ParamMap;
 import com.blog.util.RedisUtil;
 import com.blog.util.Response;
-import com.blog.util.TimeUtil;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 @CrossOrigin
@@ -46,11 +45,14 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     @RequestMapping(value = "a/qiniu/token", method = RequestMethod.POST)
     /**
      * @Description 获取 七牛云的 token
      * @param bucket 仓库名称
-     * @return com.blog.pojo.QiNiu
+     * @return com.blog.model.QiNiu
     */
     public QiNiu getToken(@RequestBody ParamMap paramMap) {
         String bucket=paramMap.get("bucket").toString();
@@ -86,6 +88,8 @@ public class ArticleController {
         //新增
         if(articleService.insert(article)!=1){
             return Response.failResponse("新增失败");
+        }else {
+            addArtCount(article.getCategoryId(),"1");
         }
         return Response.okResponse();
     };
@@ -97,9 +101,8 @@ public class ArticleController {
      * @return com.blog.util.Response
     */
     public Response getList(@RequestBody ParamMap paramMap) {
-        paramMap.put("page",(int)paramMap.get("page")*(int)paramMap.get("pageSize"));
-        Integer status=paramMap.get("state")!=null?Integer.parseInt(paramMap.get("state").toString()):0;
-        paramMap.put("status",status);
+        paramMap.setPages((int)paramMap.get("page"),(int)paramMap.get("pageSize"));
+        paramMap.put("status",paramMap.get("state")!=null?(int)paramMap.get("state"):0);
         List<Article> list=null;
         //文章总数
         Integer count =0;
@@ -107,6 +110,20 @@ public class ArticleController {
         list=articleService.selectList(paramMap);
         count=articleService.selectByAllcount(paramMap);
         if(list!=null){
+            List<Article> resList=new ArrayList<Article>();
+            //判断是否按标签查找，如果是的话则筛选出符合条件的数据
+            String tagId=paramMap.get("tagId")!=null?paramMap.get("tagId").toString():"";
+            if(!tagId.equals("")){
+                for(Article art:list){
+                    for(Tag tag:art.getTags()){
+                        if(tag.getTagId().equals(tagId)){
+                            resList.add(art);
+                            break;
+                        }
+                    }
+                }
+                return Response.setResponse("list",resList).setCount(count);
+            }
             return Response.setResponse("list",list).setCount(count);
         }
 
@@ -144,10 +161,11 @@ public class ArticleController {
         article.setCreateTime(now);
         article.setUpdateTime(now);
         article.setStatus((short) 2);
-
         //保存
         if(articleService.insert(article)!=1){
             return Response.failResponse();
+        }else {
+            addArtCount(article.getCategoryId(),"1");
         }
         return Response.okResponse();
     };
@@ -163,7 +181,7 @@ public class ArticleController {
         String now=Long.toString(new Date().getTime());
         //修改时间
         article.setUpdateTime(now);
-
+        article.setStatus((short)0);
         //修改
         if(articleService.updateArticle(article)!=1){
             return Response.failResponse();
@@ -179,22 +197,33 @@ public class ArticleController {
     */
     public Response delete(@RequestBody Article article) {
         String now=Long.toString(new Date().getTime());
+
         //修改时间
         article.setDeleteTime(now);
         article.setStatus((short) 1);
-
         //删除   第一次删除将文章状态变为删除状态，第二次删除则删掉记录
         if(articleService.deleteArticle(article)!=1){
             return Response.failResponse();
         }
+        //删除分类中的文章个数
+//        else {
+//            ParamMap paramMap =ParamMap.newMap();
+//            paramMap.set("id",article.getId());
+//            article=articleService.selectDetailById(paramMap);
+//            addArtCount(article!=null?article.getCategoryId():null,"-1");
+//        }
         return Response.okResponse();
     };
 
+    /**
+     * @Description 文章搜索
+     * @param paramMap
+     * @return com.blog.util.Response
+    */
     @RequestMapping(value = "w/article/search",method = RequestMethod.POST)
     public Response search(@RequestBody ParamMap paramMap){
-        paramMap.put("page",(int)paramMap.get("page")*(int)paramMap.get("pageSize"));
-        Integer status=paramMap.get("state")!=null?Integer.parseInt(paramMap.get("state").toString()):0;
-        paramMap.put("status",status);
+        paramMap.setPages((int)paramMap.get("page"),(int)paramMap.get("pageSize"));
+        paramMap.put("status",paramMap.get("state")!=null?(int)paramMap.get("state"):0);
         List<Article> list=null;
         //文章总数
         Integer count =0;
@@ -207,5 +236,49 @@ public class ArticleController {
         return Response.failResponse();
     }
 
+    @RequestMapping(value = "w/article/archives",method = RequestMethod.POST)
+    public Response archive(@RequestBody ParamMap paramMap){
+        List<Article> list=null;
+        //文章总数
+        Integer count =0;
+        //文章列表(分页)
+        list=articleService.selectList(paramMap);
+        count=articleService.selectByAllcount(paramMap);
+        Map<String, Map<String,List<Article>>> map=null;
+        if(list != null){
+            map=new HashMap<>();
+            for(Article article:list){
+                String year=article.getCreateTime().substring(0,4);
+                String month=article.getCreateTime().substring(5,7);
+                if(map.containsKey(year)){
+                    Map<String,List<Article>> map1=map.get(year);
+                    if(map1.containsKey(month)){
+                        map1.get(month).add(article);
+                    }else{
+                        HashMap<String,List<Article>> newMonth=new HashMap();
+                        List<Article> newList=new ArrayList<>();
+                        newList.add(article);
+                        map1.put(month,newList);
+                    }
+                }else{
+                    HashMap<String,List<Article>> newMonth=new HashMap();
+                    List<Article> newList=new ArrayList<>();
+                    newList.add(article);
+                    newMonth.put(month,newList);
+                    map.put(year,newMonth);
+                }
+            }
+            return Response.setResponse("list",map);
+        }
+        return Response.failResponse();
+    }
 
+
+    private Response addArtCount(String cId,String count){
+        ParamMap paramMap=ParamMap.newMap();
+        paramMap.set("categoryId",cId);
+        paramMap.set("count",count);
+        categoryService.updateArtCount(paramMap);
+        return Response.okResponse();
+    }
 }

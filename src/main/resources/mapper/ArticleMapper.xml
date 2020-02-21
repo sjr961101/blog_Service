@@ -35,6 +35,9 @@
     <if test="searchValue != null">
       and (title like CONCAT('%',#{searchValue,jdbcType=VARCHAR},'%') or sub_message like CONCAT('%',#{searchValue,jdbcType=VARCHAR},'%') )
     </if>
+    <if test="categoryId != null and categoryId != ''">
+      and category_id=#{categoryId,jdbcType=VARCHAR}
+    </if>
   </select>
 
   <select id="selectList" resultMap="ArticleMap">
@@ -75,15 +78,20 @@
     <if test="searchValue != null">
       and (title like CONCAT('%',#{searchValue,jdbcType=VARCHAR},'%') or sub_message like CONCAT('%',#{searchValue,jdbcType=VARCHAR},'%') )
     </if>
+    <if test="categoryId != null and categoryId != ''">
+      and a.category_id=#{categoryId,jdbcType=VARCHAR}
+    </if>
+    order by
+    create_time desc
+    <if test="offset != null ">
+    LIMIT #{offset,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+    </if>
     ) a
     LEFT JOIN article_tag_mapper b ON a.id = b.article_id
     LEFT JOIN tag c ON b.tag_id = c.id
     AND c.STATUS = 0
     ORDER BY
-    update_time DESC
-    LIMIT #{page,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
-
-
+    create_time DESC
   </select>
 
   <insert id="insert" parameterType="com.blog.model.Article" >
@@ -279,7 +287,4 @@
     and status=1
   </delete>
 
-  <select id="search" >
-    select
-  </select>
 </mapper>

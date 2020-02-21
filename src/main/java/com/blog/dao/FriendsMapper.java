@@ -1,16 +1,16 @@
 package com.blog.dao;
 
-import com.blog.pojo.Friends;
-import com.blog.pojo.FriendsKey;
+
+import com.blog.model.Friends;
 
 public interface FriendsMapper {
-    int deleteByPrimaryKey(FriendsKey key);
+
 
     int insert(Friends record);
 
     int insertSelective(Friends record);
 
-    Friends selectByPrimaryKey(FriendsKey key);
+
 
     int updateByPrimaryKeySelective(Friends record);
 

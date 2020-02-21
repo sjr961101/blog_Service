@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.blog.dao.friendsTypeMapper" >
-  <resultMap id="BaseResultMap" type="com.blog.pojo.friendsType" >
+  <resultMap id="BaseResultMap" type="com.blog.model.FriendsType" >
     <constructor >
       <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
@@ -11,23 +11,8 @@
   <sql id="Base_Column_List" >
     id, name, count
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from friends_type
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from friends_type
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.blog.pojo.friendsType" >
-    insert into friends_type (id, name, count
-      )
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{count,jdbcType=INTEGER}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.blog.pojo.friendsType" >
+
+  <insert id="insertSelective" parameterType="com.blog.model.FriendsType" >
     insert into friends_type
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -52,7 +37,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.blog.pojo.friendsType" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.blog.model.FriendsType" >
     update friends_type
     <set >
       <if test="name != null" >
@@ -64,10 +49,5 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.blog.pojo.friendsType" >
-    update friends_type
-    set name = #{name,jdbcType=VARCHAR},
-      count = #{count,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+
 </mapper>

@@ -101,4 +101,8 @@
     and can_del= 1
   </delete>
 
+  <update id="updateArtCount">
+    update category set article_count=article_count+#{count,jdbcType=INTEGER}
+    where id = #{categoryId,jdbcType=VARCHAR}
+  </update>
 </mapper>

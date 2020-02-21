@@ -1,7 +1,6 @@
 package com.blog.dao;
 
 import com.blog.model.Article;
-import com.blog.pojo.ArticleWithBLOBs;
 import com.blog.util.ParamMap;
 
 import java.util.List;

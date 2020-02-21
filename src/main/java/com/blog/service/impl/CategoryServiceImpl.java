@@ -69,5 +69,17 @@ public class CategoryServiceImpl implements CategoryService {
         return count;
     }
 
+    @Override
+    public Integer updateArtCount(ParamMap paramMap) {
+        Integer count=0;
+        try{
+            categoryMapper.updateArtCount(paramMap);
+        }catch (Exception e){
+            LogUtils.error(e);
+            return -1;
+        }
+        return count;
+    }
+
 
 }

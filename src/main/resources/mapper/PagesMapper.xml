@@ -1,45 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.blog.dao.PagesMapper" >
-  <resultMap id="BaseResultMap" type="com.blog.pojo.Pages" >
+  <resultMap id="BaseResultMap" type="com.blog.model.Pages" >
     <constructor >
       <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="type" jdbcType="VARCHAR" javaType="java.lang.String" />
     </constructor>
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.blog.pojo.PagesWithBLOBs" >
-    <constructor >
-      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="type" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="md" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
-      <arg column="html" jdbcType="LONGVARCHAR" javaType="java.lang.String" />
-    </constructor>
-  </resultMap>
+
   <sql id="Base_Column_List" >
     id, type
   </sql>
   <sql id="Blob_Column_List" >
     md, html
   </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from pages
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from pages
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.blog.pojo.PagesWithBLOBs" >
-    insert into pages (id, type, md, 
-      html)
-    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{md,jdbcType=LONGVARCHAR}, 
-      #{html,jdbcType=LONGVARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.blog.pojo.PagesWithBLOBs" >
+
+  <insert id="insertSelective" parameterType="com.blog.model.Pages" >
     insert into pages
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -70,7 +46,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.blog.pojo.PagesWithBLOBs" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.blog.model.Pages" >
     update pages
     <set >
       <if test="type != null" >
@@ -85,16 +61,5 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.blog.pojo.PagesWithBLOBs" >
-    update pages
-    set type = #{type,jdbcType=VARCHAR},
-      md = #{md,jdbcType=LONGVARCHAR},
-      html = #{html,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.blog.pojo.Pages" >
-    update pages
-    set type = #{type,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+
 </mapper>

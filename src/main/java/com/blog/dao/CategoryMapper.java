@@ -14,4 +14,6 @@ public interface CategoryMapper {
     Integer updateById(Category record);
 
     Integer deleteCategory(Category category);
+
+    Integer updateArtCount(ParamMap paramMap);
 }

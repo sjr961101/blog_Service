@@ -1,5 +1,7 @@
 package com.blog.service;
 
+
+
 import com.blog.model.Article;
 import com.blog.model.ArticleTag;
 import com.blog.util.ParamMap;
@@ -20,6 +22,5 @@ public interface ArticleService {
 
     Integer deleteArticle(Article article);
 
-    Integer deleteTag(ArticleTag articleTag);
 
 }

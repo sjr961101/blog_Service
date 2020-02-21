@@ -118,16 +118,7 @@ public class Response extends HashMap<String,Object> {
 		this.put(CODE, code);
 		return this;
 	}
-	
-	/**
-	 * 设置返回码与返回信息
-	 *
-	 * 强列建议在ErrorEnum 中定义错误, 再调用setError()方法
-	 *
-	 * @param code
-	 * @param message
-	 * @return
-	 */
+
 	public Response setCodeAndMessage(int code, String message) {
 		this.put(CODE, code);
 		this.put(MESSAGE, message);

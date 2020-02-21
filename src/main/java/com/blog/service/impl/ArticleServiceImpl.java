@@ -33,14 +33,7 @@ public class ArticleServiceImpl implements ArticleService {
             count=articleMapper.insert(record);
             if(count==1&&record.getTags()!=null){
                 //查看文章中的标签将对于关系存贮
-                List<Tag> list=record.getTags();
-                ArticleTag articleTag=null;
-                for(Tag tag:list){
-                    articleTag=new ArticleTag(record.getId(),tag.getTagId(),String.valueOf(new Date().getTime()));
-                    if(articleTagMapper.insert(articleTag)!=1){
-                        throw new SQLException();
-                    }
-                }
+                changeTag(record,(short)1);
             }
         }catch (Exception e){
             TransactionAspectSupport.currentTransactionStatus()
@@ -95,6 +88,10 @@ public class ArticleServiceImpl implements ArticleService {
         Integer count = 0;
         try {
             count = articleMapper.updateArticle(article);
+            if(count==1&&article.getTags()!=null){
+                //查看文章中的标签将对于关系存贮
+                changeTag(article,(short)2);
+            }
         } catch (Exception e) {
             LogUtils.error(e);
             return 0;
@@ -122,16 +119,21 @@ public class ArticleServiceImpl implements ArticleService {
         return count;
     }
 
-    @Override
-    public Integer deleteTag(ArticleTag articleTag) {
-        Integer count = 0;
-        try {
-            count = articleTagMapper.delete(articleTag);
-        } catch (Exception e) {
-            LogUtils.error(e);
-            return 0;
+    private void changeTag(Article record,short flag) throws SQLException{
+        List<Tag> list=record.getTags();
+        ArticleTag articleTag=null;
+        if(flag==2){
+            articleTag=new ArticleTag();
+            articleTag.setArticleId(record.getId());
+            articleTagMapper.delete(articleTag);
         }
-        return count;
+        for(Tag tag:list){
+            articleTag=new ArticleTag(record.getId(),tag.getTagId(),String.valueOf(new Date().getTime()));
+            if(articleTagMapper.insert(articleTag)!=1){
+                throw new SQLException();
+            }
+        }
+
     }
 
 }

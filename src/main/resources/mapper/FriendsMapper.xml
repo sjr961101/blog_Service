@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.blog.dao.FriendsMapper" >
-  <resultMap id="BaseResultMap" type="com.blog.pojo.Friends" >
+  <resultMap id="BaseResultMap" type="com.blog.model.Friends" >
     <constructor >
       <idArg column="aid" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <idArg column="friend_id" jdbcType="VARCHAR" javaType="java.lang.String" />
@@ -13,7 +13,7 @@
       <arg column="type_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
     </constructor>
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.blog.pojo.Friends" >
+  <resultMap id="ResultMapWithBLOBs" type="com.blog.model.Friends" >
     <constructor >
       <idArg column="aid" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <idArg column="friend_id" jdbcType="VARCHAR" javaType="java.lang.String" />
@@ -32,31 +32,8 @@
   <sql id="Blob_Column_List" >
     url
   </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.blog.pojo.FriendsKey" >
-    select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from friends
-    where aid = #{aid,jdbcType=INTEGER}
-      and friend_id = #{friendId,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="com.blog.pojo.FriendsKey" >
-    delete from friends
-    where aid = #{aid,jdbcType=INTEGER}
-      and friend_id = #{friendId,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.blog.pojo.Friends" >
-    insert into friends (aid, friend_id, name, 
-      create_time, update_time, delete_time, 
-      status, type_id, url
-      )
-    values (#{aid,jdbcType=INTEGER}, #{friendId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=INTEGER}, #{updateTime,jdbcType=INTEGER}, #{deleteTime,jdbcType=INTEGER}, 
-      #{status,jdbcType=BIT}, #{typeId,jdbcType=INTEGER}, #{url,jdbcType=LONGVARCHAR}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.blog.pojo.Friends" >
+
+  <insert id="insertSelective" parameterType="com.blog.model.Friends" >
     insert into friends
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="aid != null" >
@@ -117,7 +94,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.blog.pojo.Friends" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.blog.model.Friends" >
     update friends
     <set >
       <if test="name != null" >
@@ -145,27 +122,5 @@
     where aid = #{aid,jdbcType=INTEGER}
       and friend_id = #{friendId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.blog.pojo.Friends" >
-    update friends
-    set name = #{name,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
-      delete_time = #{deleteTime,jdbcType=INTEGER},
-      status = #{status,jdbcType=BIT},
-      type_id = #{typeId,jdbcType=INTEGER},
-      url = #{url,jdbcType=LONGVARCHAR}
-    where aid = #{aid,jdbcType=INTEGER}
-      and friend_id = #{friendId,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.blog.pojo.Friends" >
-    update friends
-    set name = #{name,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=INTEGER},
-      update_time = #{updateTime,jdbcType=INTEGER},
-      delete_time = #{deleteTime,jdbcType=INTEGER},
-      status = #{status,jdbcType=BIT},
-      type_id = #{typeId,jdbcType=INTEGER}
-    where aid = #{aid,jdbcType=INTEGER}
-      and friend_id = #{friendId,jdbcType=VARCHAR}
-  </update>
+
 </mapper>

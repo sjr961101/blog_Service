@@ -15,13 +15,6 @@ import java.util.Locale;
  * @author
  */
 public class BaseMap extends HashMap<String, Object> implements Serializable {
-	
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	public BaseMap() {
 		
 	}
@@ -38,69 +31,7 @@ public class BaseMap extends HashMap<String, Object> implements Serializable {
 		}
 		return value;
 	}
-	
-	public void convertsInt(String...keys){
-		for(String key: keys){
-			if(this.containsKey(key)) {
-				Object value = this.getInt(key);
-				this.setProperty(key, value);
-			}
-		}
-	}
-	
-	public void convertsLike(String...keys){
-		for(String key: keys){
-			if(this.containsKey(key)) {
-				Object value = this.getLikeValue(key);
-				this.setProperty(key, value);
-			}
-		}
-	}
-	
-	public void dateBefore(String key, int before) {
-		Date date = this.getDate(key);
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.add(Calendar.DATE, before);
-		date = cal.getTime();
-		
-		this.setProperty(key, date);
-	}
-	
-	public void setBeginDateTimeBefore(String key, Date value, int before) {
-		Date date = value;
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.add(Calendar.DATE, 0-before);
-		date = cal.getTime();
-		
-		this.setProperty(key, date);
-		
-		String dateStr = this.getDateString(key);
-		dateStr += " 00:00:00";
-		
-		this.setProperty(key, dateStr);
-	}
-	
-	public void setEndDateTimeBefore(String key, Date value, int before) {
-		Date date = value;
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.add(Calendar.DATE, 0-before);
-		date = cal.getTime();
-		
-		this.setProperty(key, date);
-		
-		String dateStr = this.getTomorrowDateString(key);
-		dateStr += " 00:00:00";
-		
-		this.setProperty(key, dateStr);
-	}
-	
-	public void setBeginDateTime(String key) {
-		this.setBeginDateTimeStr(key);
-		this.convertsDateTime(key);
-	}
+
 	
 	public void setBeginDateTimeStr(String key) {
 		String value = this.getDateString(key);
@@ -361,9 +292,5 @@ public class BaseMap extends HashMap<String, Object> implements Serializable {
 		return df.format(cal.getTime());
 	}
 	
-/*	public String getSHA1(String key){
-		key = this.getString(key);
-//		LogUtils.info("ParamKey::::SHA1="+key);
-		return SHA1.signature(key);
-	}*/
+
 }

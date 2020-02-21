@@ -13,4 +13,6 @@ public interface CategoryService {
     Integer updateById(Category record);
 
     Integer deleteCategory(Category category);
+
+    Integer updateArtCount(ParamMap paramMap);
 }

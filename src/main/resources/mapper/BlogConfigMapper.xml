@@ -31,7 +31,7 @@
     delete from blog_config
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insertSelective" parameterType="com.blog.pojo.blogConfigWithBLOBs" >
+  <insert id="insertSelective" parameterType="com.blog.model.BlogConfig" >
     insert into blog_config
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -92,7 +92,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.blog.pojo.blogConfigWithBLOBs" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.blog.model.BlogConfig" >
     update blog_config
     <set >
       <if test="blogName != null" >

@@ -2,9 +2,9 @@ package com.blog.controller;
 
 
 
-import com.blog.model.Article;
-import com.blog.model.QiNiu;
-import com.blog.model.Tag;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.blog.model.*;
 import com.blog.service.ArticleService;
 import com.blog.service.CategoryService;
 import com.blog.util.ParamMap;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -47,6 +48,9 @@ public class ArticleController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @RequestMapping(value = "a/qiniu/token", method = RequestMethod.POST)
     /**
@@ -139,8 +143,14 @@ public class ArticleController {
     public Response getDetail(@RequestBody ParamMap paramMap) {
         Article article=null;
         article=articleService.selectDetailById(paramMap);
-
         if(article!=null){
+            if(redisUtil.get("blogInfo")!=null){
+               BlogConfig blogConfig= JSON.parseObject(redisUtil.get("blogInfo"),BlogConfig.class);
+               article.setQrcode(blogConfig);
+            }else{
+               Response response=restTemplate.postForObject("http://localhost:8088/Blog/w/blogInfo",null,Response.class);
+               article.setQrcode(JSONObject.parseObject(JSON.toJSONString(response.getData()),BlogConfig.class));
+            }
             return Response.setResponse("list",article);
         }
 
@@ -205,6 +215,7 @@ public class ArticleController {
         if(articleService.deleteArticle(article)!=1){
             return Response.failResponse();
         }
+        addArtCount(article.getCategoryId(),"-1");
         //删除分类中的文章个数
 //        else {
 //            ParamMap paramMap =ParamMap.newMap();
@@ -236,8 +247,15 @@ public class ArticleController {
         return Response.failResponse();
     }
 
+    /**
+     * @Description: 归档功能
+     * @Author: 沈俊仁
+     * @Date:
+    */
     @RequestMapping(value = "w/article/archives",method = RequestMethod.POST)
     public Response archive(@RequestBody ParamMap paramMap){
+        paramMap.setPages((int)paramMap.get("page"),(int)paramMap.get("pageSize"));
+        paramMap.put("status",paramMap.get("state")!=null?(int)paramMap.get("state"):0);
         List<Article> list=null;
         //文章总数
         Integer count =0;
@@ -245,11 +263,13 @@ public class ArticleController {
         list=articleService.selectList(paramMap);
         count=articleService.selectByAllcount(paramMap);
         Map<String, Map<String,List<Article>>> map=null;
+        //如果查到信息则按照年月存储
         if(list != null){
             map=new HashMap<>();
             for(Article article:list){
                 String year=article.getCreateTime().substring(0,4);
                 String month=article.getCreateTime().substring(5,7);
+                //该年已有数据
                 if(map.containsKey(year)){
                     Map<String,List<Article>> map1=map.get(year);
                     if(map1.containsKey(month)){
@@ -260,7 +280,8 @@ public class ArticleController {
                         newList.add(article);
                         map1.put(month,newList);
                     }
-                }else{
+
+                }else{//该年未有数据
                     HashMap<String,List<Article>> newMonth=new HashMap();
                     List<Article> newList=new ArrayList<>();
                     newList.add(article);
@@ -268,7 +289,12 @@ public class ArticleController {
                     map.put(year,newMonth);
                 }
             }
-            return Response.setResponse("list",map);
+            Map<String,Object> result=new HashMap<>();
+            result.put("count",count);
+            result.put("list",map);
+            result.put("page",paramMap.get("page"));
+            result.put("pageSize",paramMap.get("pageSize"));
+            return Response.okResponse().setData(result);
         }
         return Response.failResponse();
     }

@@ -98,6 +98,14 @@ public class Response extends HashMap<String,Object> {
 	}
 
 	/**
+	 * 获得Data内容
+	 */
+	public Object getData() {
+		Object data = this.get(DATA);
+		return data != null ? data : null;
+	}
+
+	/**
 	 * @Description:  修改键名
 	*/
 	public Response moveTo(String fromKey, String toKey) {

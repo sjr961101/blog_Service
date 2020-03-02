@@ -21,6 +21,11 @@ public class CommentController {
     @Autowired
     CommentService commentService;
 
+    /** 
+     * @Description: 发布/回复评论
+     * @Author: 沈俊仁
+     * @Date:  
+    */ 
     @RequestMapping(value = "w/comments/add",method = RequestMethod.POST)
     public Response insertComment(@RequestBody Comments comments, HttpServletRequest request){
         String ip=getIp(request);
@@ -38,6 +43,11 @@ public class CommentController {
         return Response.okResponse();
     }
 
+    /** 
+     * @Description: 获取评论列表
+     * @Author: 沈俊仁
+     * @Date:  
+    */ 
     @RequestMapping(value="w/comments/list",method = RequestMethod.POST)
     public Response selectComment(@RequestBody ParamMap paramMap){
             String articleId = paramMap.get("articleId").toString();
@@ -49,6 +59,11 @@ public class CommentController {
             return Response.setResponse("list",comments).setCount(count);
     }
 
+    /**
+     * @Description: 获取所有评论
+     * @Author: 沈俊仁
+     * @Date:
+    */
     @RequestMapping(value = "a/comments/alllist",method = RequestMethod.POST)
     public Response selectAll(@RequestBody ParamMap paramMap){
         Integer count=commentService.selectCount(null);

@@ -17,6 +17,11 @@ import java.util.List;
 @CrossOrigin
 @Controller
 @ResponseBody
+/**
+ * @Description: 评论功能
+ * @Author: 沈俊仁
+ * @Date:
+*/
 public class CommentController {
     @Autowired
     CommentService commentService;

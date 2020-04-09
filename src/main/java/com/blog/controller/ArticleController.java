@@ -265,24 +265,24 @@ public class ArticleController {
         Map<String, Map<String,List<Article>>> map=null;
         //如果查到信息则按照年月存储
         if(list != null){
-            map=new HashMap<>();
+            map=new LinkedHashMap<>();
             for(Article article:list){
-                String year=article.getCreateTime().substring(0,4);
-                String month=article.getCreateTime().substring(5,7);
+                String year=article.getCreateTime().substring(0,4)+"年";
+                String month=article.getCreateTime().substring(5,7)+"月";
                 //该年已有数据
                 if(map.containsKey(year)){
                     Map<String,List<Article>> map1=map.get(year);
                     if(map1.containsKey(month)){
                         map1.get(month).add(article);
                     }else{
-                        HashMap<String,List<Article>> newMonth=new HashMap();
+                        HashMap<String,List<Article>> newMonth=new HashMap<>();
                         List<Article> newList=new ArrayList<>();
                         newList.add(article);
                         map1.put(month,newList);
                     }
 
                 }else{//该年未有数据
-                    HashMap<String,List<Article>> newMonth=new HashMap();
+                    HashMap<String,List<Article>> newMonth=new LinkedHashMap();
                     List<Article> newList=new ArrayList<>();
                     newList.add(article);
                     newMonth.put(month,newList);

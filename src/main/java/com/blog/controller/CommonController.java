@@ -9,16 +9,19 @@ import com.blog.util.RedisUtil;
 import com.blog.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 @CrossOrigin
 @Controller
 @ResponseBody
+/**
+ * @Description:  系统功能
+ * @Author: 沈俊仁
+ * @Date:
+*/
 public class CommonController {
     @Autowired
     CommonService commonService;
@@ -45,9 +48,9 @@ public class CommonController {
      * @Description:获取博客信息
      * @Author: 沈俊仁
      * @Date:
-    */
+     */
     @RequestMapping(value = "/w/blogInfo" , method = RequestMethod.POST)
-    public Response getInfo(){
+    public Response blogInfo(){
         BlogConfig blogConfig=null;
         if(redisUtil.get("blogInfo")!=null){
             blogConfig=JSON.parseObject(redisUtil.get("blogInfo"),BlogConfig.class);
@@ -63,5 +66,45 @@ public class CommonController {
             redisUtil.set("blogInfo", JSON.toJSONString(blogConfig).toString());
         }
         return  Response.setResponse(blogConfig);
+    }
+
+
+    /**
+     * @Description:获取博客信息
+     * @Author: 沈俊仁
+     * @Date:
+     */
+    @RequestMapping(value = "/a/webConfig" , method = RequestMethod.POST)
+    public Response getWebConfig(){
+        BlogConfig blogConfig=null;
+        if(redisUtil.get("blogInfo")!=null){
+            blogConfig=JSON.parseObject(redisUtil.get("blogInfo"),BlogConfig.class);
+        }else {
+            blogConfig = commonService.blogInfo();
+            Common common = commonService.statistic();
+            if (blogConfig == null || common == null) {
+                return Response.failResponse("查询失败");
+            }
+            blogConfig.setArticleCount(common.getPublishCount());
+            blogConfig.setCategoryCount(common.getCategoryCount());
+            blogConfig.setTagCount(common.getTagCount());
+            redisUtil.set("blogInfo", JSON.toJSONString(blogConfig).toString());
+        }
+        return  Response.setResponse(blogConfig);
+    }
+
+    /**
+     * @Description:修改博客信息
+     * @Author: 沈俊仁
+     * @Date:
+     */
+    @RequestMapping(value = "/a/webConfig/modify" , method = RequestMethod.POST)
+    public Response modifyWebConfig(@RequestBody BlogConfig blogConfig, HttpServletRequest request){
+        if(blogConfig!=null && blogConfig.getId()!=null){
+            if(commonService.modifyWebConfig(blogConfig)==1){
+                return  Response.okResponse();
+            }
+        }
+        return  Response.failResponse();
     }
 }

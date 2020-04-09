@@ -7,4 +7,6 @@ public interface CommonService {
     Common statistic();
 
     BlogConfig blogInfo();
+
+    Integer  modifyWebConfig(BlogConfig blogConfig);
 }

@@ -40,4 +40,16 @@ public class CommonServiceImpl implements CommonService {
         }
         return blogConfig;
     }
+
+    @Override
+    public Integer modifyWebConfig(BlogConfig blogConfig) {
+        int count=0;
+        try{
+            count = blogConfigMapper.modifyWebConfig(blogConfig);
+        }catch (Exception e){
+            LogUtils.error(e);
+            return null;
+        }
+        return count;
+    }
 }

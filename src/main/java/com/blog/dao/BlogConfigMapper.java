@@ -7,6 +7,6 @@ public interface BlogConfigMapper {
 
     BlogConfig selectConfig();
 
-
+    Integer modifyWebConfig(BlogConfig blogConfig);
 
 }

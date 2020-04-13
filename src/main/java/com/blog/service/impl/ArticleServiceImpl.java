@@ -4,6 +4,7 @@ package com.blog.service.impl;
 import com.blog.dao.ArticleMapper;
 
 import com.blog.dao.ArticleTagMapper;
+import com.blog.dao.CategoryMapper;
 import com.blog.model.Article;
 import com.blog.model.ArticleTag;
 import com.blog.model.Tag;
@@ -26,6 +27,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired(required = false)
     ArticleTagMapper articleTagMapper;
 
+    @Autowired(required = false)
+    private CategoryMapper categoryMapper;
+
     @Override
     public int insert(Article record) {
         Integer count=0;
@@ -34,6 +38,7 @@ public class ArticleServiceImpl implements ArticleService {
             if(count==1&&record.getTags()!=null){
                 //查看文章中的标签将对于关系存贮
                 changeTag(record,(short)1);
+                updateArtCount(record.getCategoryId(),"1");
             }
         }catch (Exception e){
             TransactionAspectSupport.currentTransactionStatus()
@@ -109,6 +114,9 @@ public class ArticleServiceImpl implements ArticleService {
                 count=articleTagMapper.delete(at);
             }else{
                 count=articleMapper.updateArticle(article);
+                if(count==1) {
+                    updateArtCount(article.getCategoryId(), "-1");
+                }
             }
         }catch (Exception e){
             TransactionAspectSupport.currentTransactionStatus()
@@ -122,6 +130,7 @@ public class ArticleServiceImpl implements ArticleService {
     private void changeTag(Article record,short flag) throws SQLException{
         List<Tag> list=record.getTags();
         ArticleTag articleTag=null;
+        //如果为更新则先删除原有标签再添加新标签
         if(flag==2){
             articleTag=new ArticleTag();
             articleTag.setArticleId(record.getId());
@@ -134,6 +143,20 @@ public class ArticleServiceImpl implements ArticleService {
             }
         }
 
+    }
+
+    Integer updateArtCount(String cId,String count) {
+        ParamMap paramMap=ParamMap.newMap();
+        paramMap.set("categoryId",cId);
+        paramMap.set("count",count);
+        int count1=0;
+        try{
+            count1=categoryMapper.updateArtCount(paramMap);
+        }catch (Exception e){
+            LogUtils.error(e);
+            return -1;
+        }
+        return count1;
     }
 
 }

@@ -93,7 +93,7 @@ public class ArticleController {
         if(articleService.insert(article)!=1){
             return Response.failResponse("新增失败");
         }else {
-            addArtCount(article.getCategoryId(),"1");
+
         }
         return Response.okResponse();
     };
@@ -175,7 +175,7 @@ public class ArticleController {
         if(articleService.insert(article)!=1){
             return Response.failResponse();
         }else {
-            addArtCount(article.getCategoryId(),"1");
+
         }
         return Response.okResponse();
     };
@@ -215,7 +215,6 @@ public class ArticleController {
         if(articleService.deleteArticle(article)!=1){
             return Response.failResponse();
         }
-        addArtCount(article.getCategoryId(),"-1");
         //删除分类中的文章个数
 //        else {
 //            ParamMap paramMap =ParamMap.newMap();
@@ -300,11 +299,5 @@ public class ArticleController {
     }
 
 
-    private Response addArtCount(String cId,String count){
-        ParamMap paramMap=ParamMap.newMap();
-        paramMap.set("categoryId",cId);
-        paramMap.set("count",count);
-        categoryService.updateArtCount(paramMap);
-        return Response.okResponse();
-    }
+
 }

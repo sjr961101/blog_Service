@@ -33,7 +33,13 @@
 
   <select id="selectList" resultMap="Category" >
     select
-      id,article_count,`name`,create_time,`status`,update_time,can_del
+      id,
+      article_count,
+      `name`,
+      `status`,
+      can_del,
+      FROM_UNIXTIME( create_time / 1000, '%Y-%m-%d %H:%i:%s' ) AS create_time,
+      FROM_UNIXTIME( update_time / 1000, '%Y-%m-%d %H:%i:%s' ) AS update_time
     from category
     where `status`=0
   </select>

@@ -12,7 +12,8 @@
   </resultMap>
 
   <sql id="Base_Column_List" >
-     id, name, create_time, update_time, status, article_count
+     id, name, FROM_UNIXTIME( create_time / 1000, '%Y-%m-%d %H:%i:%s' ) AS create_time,
+      FROM_UNIXTIME( update_time / 1000, '%Y-%m-%d %H:%i:%s' ) AS update_time, status, article_count
   </sql>
 
   <select id="selectList" resultMap="Tag" >
